@@ -11,35 +11,22 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
         
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        /* Drag and Drop Styles */
-        .dragging { opacity: 0.5; transform: scale(0.95); }
-        .drag-over { background-color: #f0f9ff; border: 2px dashed #3b82f6; }
         
-        /* Animations */
         @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-slide-in { animation: slideIn 0.3s ease-out; }
         
-        @keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-        .animate-pulse-soft { animation: pulse-soft 2s infinite; }
-
-        /* Glassmorphism */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out; }
+        
         .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         
-        /* Custom Colors */
         .bg-topo { background-color: #10b981; }
         .bg-meio { background-color: #3b82f6; }
         .bg-fundo { background-color: #ef4444; }
-        .text-topo { color: #10b981; }
-        .text-meio { color: #3b82f6; }
-        .text-fundo { color: #ef4444; }
         
-        /* Status Colors */
         .status-ideia { background-color: #f3f4f6; color: #6b7280; }
         .status-roteiro { background-color: #dbeafe; color: #1e40af; }
         .status-gravando { background-color: #fef3c7; color: #92400e; }
@@ -47,121 +34,261 @@
         .status-agendado { background-color: #d1fae5; color: #065f46; }
         .status-publicado { background-color: #c7d2fe; color: #3730a3; }
 
-        /* Priority */
         .priority-Alta { border-left: 4px solid #ef4444; }
         .priority-Média { border-left: 4px solid #f59e0b; }
         .priority-Baixa { border-left: 4px solid #10b981; }
 
-        /* Calendar Grid */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background-color: #e5e7eb; }
         .calendar-day { background-color: white; min-height: 120px; }
         
-        /* Kanban */
         .kanban-column { min-height: 500px; transition: all 0.3s; }
         
-        /* Modal */
+        .dragging { opacity: 0.5; transform: scale(0.95); }
+        .drag-over { background-color: #f0f9ff; border: 2px dashed #3b82f6; }
+        
         .modal-backdrop { background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); }
         
-        /* Text Editor */
         .rich-textarea { min-height: 200px; resize: vertical; }
+
+        /* Auth Pages */
+        .auth-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 h-screen overflow-hidden">
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-40 transition-transform duration-300 transform translate-x-0">
-        <div class="p-6 border-b border-gray-100">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">
+    <!-- AUTHENTICATION PAGES -->
+    <div id="auth-container" class="auth-bg flex items-center justify-center p-4">
+        <!-- Login Page -->
+        <div id="login-page" class="auth-card w-full max-w-md rounded-2xl shadow-2xl p-8 animate-slide-in">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4 shadow-lg">
                     CF
                 </div>
+                <h1 class="text-2xl font-bold text-gray-900">ContentFlow</h1>
+                <p class="text-gray-500 mt-2">Gestão de Conteúdo Digital</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-6">
                 <div>
-                    <h1 class="font-bold text-xl text-gray-900">ContentFlow</h1>
-                    <p class="text-xs text-gray-500">Gestão de Conteúdo</p>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-3 top-3 text-gray-400"></i>
+                        <input type="email" id="login-email" required 
+                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                               placeholder="seu@email.com">
+                    </div>
                 </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
+                        <input type="password" id="login-password" required 
+                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                               placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between text-sm">
+                    <label class="flex items-center text-gray-600">
+                        <input type="checkbox" class="mr-2 rounded text-indigo-600 focus:ring-indigo-500">
+                        Lembrar-me
+                    </label>
+                    <a href="#" onclick="showResetPassword()" class="text-indigo-600 hover:text-indigo-800 font-medium">Esqueceu a senha?</a>
+                </div>
+
+                <button type="submit" 
+                        class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-[1.02] transition-all">
+                    Entrar
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-gray-600">
+                    Não tem uma conta? 
+                    <button onclick="showRegister()" class="text-indigo-600 hover:text-indigo-800 font-semibold ml-1">Criar conta</button>
+                </p>
             </div>
         </div>
 
-        <nav class="p-4 space-y-1">
-            <button onclick="navigateTo('dashboard')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors" data-page="dashboard">
-                <i class="fas fa-chart-pie w-5"></i>
-                <span class="font-medium">Dashboard</span>
-            </button>
-            <button onclick="navigateTo('meses')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors" data-page="meses">
-                <i class="fas fa-calendar-alt w-5"></i>
-                <span class="font-medium">Meses</span>
-            </button>
-            <button onclick="navigateTo('calendario')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors" data-page="calendario">
-                <i class="fas fa-calendar-week w-5"></i>
-                <span class="font-medium">Calendário</span>
-            </button>
-            <button onclick="navigateTo('pipeline')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors" data-page="pipeline">
-                <i class="fas fa-columns w-5"></i>
-                <span class="font-medium">Pipeline</span>
-            </button>
-            <button onclick="navigateTo('metricas')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors" data-page="metricas">
-                <i class="fas fa-chart-line w-5"></i>
-                <span class="font-medium">Métricas</span>
-            </button>
-            <button onclick="navigateTo('banco')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors" data-page="banco">
-                <i class="fas fa-database w-5"></i>
-                <span class="font-medium">Banco de Conteúdos</span>
-            </button>
-        </nav>
+        <!-- Register Page -->
+        <div id="register-page" class="auth-card w-full max-w-md rounded-2xl shadow-2xl p-8 hidden animate-slide-in">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4 shadow-lg">
+                    CF
+                </div>
+                <h1 class="text-2xl font-bold text-gray-900">Criar Conta</h1>
+                <p class="text-gray-500 mt-2">Comece a gerenciar seu conteúdo</p>
+            </div>
 
-        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-            <div class="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-lg">
-                <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-semibold text-sm">
-                    T
+            <form onsubmit="handleRegister(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nome Completo</label>
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-3 top-3 text-gray-400"></i>
+                        <input type="text" id="register-name" required 
+                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                               placeholder="Seu nome">
+                    </div>
                 </div>
-                <div class="flex-1">
-                    <p class="text-sm font-medium text-gray-900">Talles</p>
-                    <p class="text-xs text-gray-500">Produtor</p>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-3 top-3 text-gray-400"></i>
+                        <input type="email" id="register-email" required 
+                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                               placeholder="seu@email.com">
+                    </div>
                 </div>
-                <button onclick="toggleUser()" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-exchange-alt"></i>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
+                        <input type="password" id="register-password" required minlength="6"
+                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                               placeholder="Mínimo 6 caracteres">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Confirmar Senha</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
+                        <input type="password" id="register-password-confirm" required 
+                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                               placeholder="Repita a senha">
+                    </div>
+                </div>
+
+                <div class="flex items-center text-sm">
+                    <input type="checkbox" id="terms" required class="mr-2 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="terms" class="text-gray-600">
+                        Aceito os <a href="#" class="text-indigo-600 hover:underline">termos de uso</a> e 
+                        <a href="#" class="text-indigo-600 hover:underline">política de privacidade</a>
+                    </label>
+                </div>
+
+                <button type="submit" 
+                        class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-[1.02] transition-all">
+                    Criar Conta
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-gray-600">
+                    Já tem uma conta? 
+                    <button onclick="showLogin()" class="text-indigo-600 hover:text-indigo-800 font-semibold ml-1">Entrar</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APPLICATION (Hidden by default) -->
+    <div id="app-container" class="hidden h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-40 transition-transform duration-300 transform translate-x-0">
+            <div class="p-6 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">
+                        CF
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-xl text-gray-900">ContentFlow</h1>
+                        <p class="text-xs text-gray-500" id="user-display-name">Usuário</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="p-4 space-y-1">
+                <button onclick="navigateTo('dashboard')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors" data-page="dashboard">
+                    <i class="fas fa-chart-pie w-5"></i>
+                    <span class="font-medium">Dashboard</span>
+                </button>
+                <button onclick="navigateTo('meses')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors" data-page="meses">
+                    <i class="fas fa-calendar-alt w-5"></i>
+                    <span class="font-medium">Meses</span>
+                </button>
+                <button onclick="navigateTo('calendario')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors" data-page="calendario">
+                    <i class="fas fa-calendar-week w-5"></i>
+                    <span class="font-medium">Calendário</span>
+                </button>
+                <button onclick="navigateTo('pipeline')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors" data-page="pipeline">
+                    <i class="fas fa-columns w-5"></i>
+                    <span class="font-medium">Pipeline</span>
+                </button>
+                <button onclick="navigateTo('metricas')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors" data-page="metricas">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span class="font-medium">Métricas</span>
+                </button>
+                <button onclick="navigateTo('banco')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors" data-page="banco">
+                    <i class="fas fa-database w-5"></i>
+                    <span class="font-medium">Banco de Conteúdos</span>
+                </button>
+            </nav>
+
+            <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 space-y-2">
+                <div class="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-lg">
+                    <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-semibold text-sm" id="user-avatar">
+                        U
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-900 truncate" id="sidebar-user-name">Usuário</p>
+                        <p class="text-xs text-gray-500 truncate" id="sidebar-user-email">email@exemplo.com</p>
+                    </div>
+                </div>
+                <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors">
+                    <i class="fas fa-sign-out-alt w-5"></i>
+                    <span class="font-medium">Sair</span>
                 </button>
             </div>
-        </div>
-    </aside>
+        </aside>
 
-    <!-- Main Content -->
-    <main class="ml-64 h-full overflow-y-auto bg-gray-50">
-        <!-- Header -->
-        <header class="sticky top-0 z-30 glass border-b border-gray-200 px-8 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <button onclick="toggleSidebar()" class="lg:hidden text-gray-600 hover:text-gray-900">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                    <h2 id="page-title" class="text-2xl font-bold text-gray-900">Dashboard</h2>
-                </div>
-                
-                <div class="flex items-center gap-4">
-                    <!-- Search -->
-                    <div class="relative hidden md:block">
-                        <input type="text" id="global-search" placeholder="Buscar conteúdos..." 
-                               class="w-64 pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                               onkeyup="handleSearch(event)">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+        <!-- Main Content -->
+        <main class="ml-64 h-full overflow-y-auto bg-gray-50">
+            <!-- Header -->
+            <header class="sticky top-0 z-30 glass border-b border-gray-200 px-8 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <button onclick="toggleSidebar()" class="lg:hidden text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h2 id="page-title" class="text-2xl font-bold text-gray-900">Dashboard</h2>
                     </div>
                     
-                    <!-- Quick Add -->
-                    <button onclick="openModal()" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200">
-                        <i class="fas fa-plus"></i>
-                        <span class="hidden sm:inline">Novo Conteúdo</span>
-                    </button>
+                    <div class="flex items-center gap-4">
+                        <div class="relative hidden md:block">
+                            <input type="text" id="global-search" placeholder="Buscar conteúdos..." 
+                                   class="w-64 pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                   onkeyup="handleSearch(event)">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                        
+                        <button onclick="openModal()" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200">
+                            <i class="fas fa-plus"></i>
+                            <span class="hidden sm:inline">Novo Conteúdo</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </header>
+            </header>
 
-        <!-- Content Container -->
-        <div id="content-container" class="p-8">
-            <!-- Dynamic content loaded here -->
-        </div>
-    </main>
+            <div id="content-container" class="p-8"></div>
+        </main>
+    </div>
 
-    <!-- Modal -->
+    <!-- Content Modal -->
     <div id="content-modal" class="fixed inset-0 z-50 hidden">
         <div class="modal-backdrop absolute inset-0" onclick="closeModal()"></div>
         <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
@@ -299,11 +426,7 @@
 
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Roteiro</label>
-                            <textarea id="roteiro" rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent rich-textarea" placeholder="Estrutura do roteiro:
-[HOOK] - Primeiros 3 segundos
-[PROBLEMA] - Dor do público
-[SOLUÇÃO] - Conteúdo principal
-[CTA] - Call to action"></textarea>
+                            <textarea id="roteiro" rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent rich-textarea" placeholder="Estrutura do roteiro..."></textarea>
                         </div>
 
                         <div class="md:col-span-2">
@@ -322,20 +445,153 @@
     </div>
 
     <script>
-        // Data Store
-        let conteudos = JSON.parse(localStorage.getItem('conteudos')) || [];
-        let currentUser = 'Talles';
+        // ==================== AUTHENTICATION SYSTEM ====================
+        
+        let currentUser = null;
+        let conteudos = [];
         let currentPage = 'dashboard';
         let draggedItem = null;
         let currentCalendarDate = new Date();
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            if (conteudos.length === 0) generateSampleData();
-            navigateTo('dashboard');
+            checkAuth();
         });
 
-        // Sample Data Generator
+        function checkAuth() {
+            const session = localStorage.getItem('currentSession');
+            if (session) {
+                currentUser = JSON.parse(session);
+                showApp();
+            } else {
+                showAuth();
+            }
+        }
+
+        function showAuth() {
+            document.getElementById('auth-container').classList.remove('hidden');
+            document.getElementById('app-container').classList.add('hidden');
+            showLogin();
+        }
+
+        function showApp() {
+            document.getElementById('auth-container').classList.add('hidden');
+            document.getElementById('app-container').classList.remove('hidden');
+            
+            // Update UI with user info
+            document.getElementById('user-display-name').textContent = currentUser.name;
+            document.getElementById('sidebar-user-name').textContent = currentUser.name;
+            document.getElementById('sidebar-user-email').textContent = currentUser.email;
+            document.getElementById('user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            
+            // Load user data
+            loadUserData();
+            navigateTo('dashboard');
+        }
+
+        function showLogin() {
+            document.getElementById('login-page').classList.remove('hidden');
+            document.getElementById('register-page').classList.add('hidden');
+        }
+
+        function showRegister() {
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('register-page').classList.remove('hidden');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.toLowerCase();
+            const password = document.getElementById('login-password').value;
+            
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === hashPassword(password));
+            
+            if (user) {
+                currentUser = { id: user.id, name: user.name, email: user.email };
+                localStorage.setItem('currentSession', JSON.stringify(currentUser));
+                showApp();
+            } else {
+                alert('Email ou senha incorretos!');
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value.toLowerCase();
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-password-confirm').value;
+            
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+            
+            let users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            if (users.find(u => u.email === email)) {
+                alert('Este email já está cadastrado!');
+                return;
+            }
+            
+            const newUser = {
+                id: Date.now().toString(),
+                name,
+                email,
+                password: hashPassword(password),
+                createdAt: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Create empty data structure for new user
+            localStorage.setItem(`data_${newUser.id}`, JSON.stringify([]));
+            
+            alert('Conta criada com sucesso! Faça login para continuar.');
+            showLogin();
+        }
+
+        function hashPassword(password) {
+            // Simple hash for demo purposes - in production use bcrypt
+            let hash = 0;
+            for (let i = 0; i < password.length; i++) {
+                const char = password.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return hash.toString();
+        }
+
+        function logout() {
+            if (confirm('Deseja realmente sair?')) {
+                localStorage.removeItem('currentSession');
+                currentUser = null;
+                conteudos = [];
+                showAuth();
+            }
+        }
+
+        // ==================== DATA MANAGEMENT ====================
+
+        function loadUserData() {
+            if (!currentUser) return;
+            const key = `data_${currentUser.id}`;
+            conteudos = JSON.parse(localStorage.getItem(key) || '[]');
+            
+            // If no data, generate sample
+            if (conteudos.length === 0) {
+                generateSampleData();
+            }
+        }
+
+        function saveUserData() {
+            if (!currentUser) return;
+            const key = `data_${currentUser.id}`;
+            localStorage.setItem(key, JSON.stringify(conteudos));
+        }
+
         function generateSampleData() {
             const canais = ['Instagram', 'YouTube'];
             const tipos = ['Reel', 'Shorts', 'Live', 'Post', 'Carrossel', 'Vídeo', 'Aula'];
@@ -349,12 +605,12 @@
             const hoje = new Date();
             const mesAtual = hoje.toISOString().slice(0, 7);
             
-            for (let i = 1; i <= 15; i++) {
+            for (let i = 1; i <= 10; i++) {
                 const data = new Date(hoje);
                 data.setDate(data.getDate() + Math.floor(Math.random() * 30) - 5);
                 
                 conteudos.push({
-                    id: i,
+                    id: Date.now() + i,
                     titulo: `Conteúdo ${i} - ${tipos[Math.floor(Math.random() * tipos.length)]}`,
                     mes: mesAtual,
                     dataPrevista: data.toISOString().split('T')[0],
@@ -375,18 +631,14 @@
                     atualizadoEm: new Date().toISOString()
                 });
             }
-            saveData();
+            saveUserData();
         }
 
-        function saveData() {
-            localStorage.setItem('conteudos', JSON.stringify(conteudos));
-        }
+        // ==================== NAVIGATION & UI ====================
 
-        // Navigation
         function navigateTo(page) {
             currentPage = page;
             
-            // Update sidebar active state
             document.querySelectorAll('.nav-item').forEach(item => {
                 if (item.dataset.page === page) {
                     item.classList.add('bg-indigo-50', 'text-indigo-600', 'border-r-4', 'border-indigo-600');
@@ -397,7 +649,6 @@
                 }
             });
 
-            // Update title
             const titles = {
                 dashboard: 'Dashboard',
                 meses: 'Meses',
@@ -408,7 +659,6 @@
             };
             document.getElementById('page-title').textContent = titles[page];
 
-            // Render content
             const container = document.getElementById('content-container');
             container.innerHTML = '';
             
@@ -422,7 +672,8 @@
             }
         }
 
-        // Dashboard
+        // ==================== DASHBOARD ====================
+
         function renderDashboard(container) {
             const hoje = new Date();
             const mesAtual = hoje.toISOString().slice(0, 7);
@@ -433,7 +684,6 @@
                 return dataPrev < hoje && c.status !== 'Publicado';
             });
             
-            // Próximos 7 dias
             const proximaSemana = conteudos.filter(c => {
                 const data = new Date(c.dataPrevista);
                 const diff = Math.ceil((data - hoje) / (1000 * 60 * 60 * 24));
@@ -487,7 +737,7 @@
 
                     <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 ${atrasados.length > 0 ? 'ring-2 ring-red-100' : ''}">
                         <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 ${atrasados.length > 0 ? 'bg-red-100 text-red-600 animate-pulse-soft' : 'bg-gray-100 text-gray-600'} rounded-xl flex items-center justify-center">
+                            <div class="w-12 h-12 ${atrasados.length > 0 ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'} rounded-xl flex items-center justify-center">
                                 <i class="fas fa-exclamation-triangle text-xl"></i>
                             </div>
                             <span class="text-sm ${atrasados.length > 0 ? 'text-red-600 font-semibold' : 'text-gray-500'}">Atrasados</span>
@@ -559,7 +809,6 @@
                 ` : ''}
             `;
 
-            // Render Chart
             setTimeout(() => {
                 const ctx = document.getElementById('funilChart');
                 if (ctx) {
@@ -576,16 +825,15 @@
                         options: {
                             responsive: true,
                             maintainAspectRatio: true,
-                            plugins: {
-                                legend: { display: false }
-                            }
+                            plugins: { legend: { display: false } }
                         }
                     });
                 }
             }, 100);
         }
 
-        // Meses
+        // ==================== MESES ====================
+
         function renderMeses(container) {
             const meses = [...new Set(conteudos.map(c => c.mes))].sort().reverse();
             const mesAtual = new Date().toISOString().slice(0, 7);
@@ -627,10 +875,6 @@
                                     <span class="text-gray-500">Publicados</span>
                                     <span class="font-semibold text-green-600">${publicados.length}</span>
                                 </div>
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-gray-500">Pendentes</span>
-                                    <span class="font-semibold text-orange-600">${conteudosMes.length - publicados.length}</span>
-                                </div>
                                 
                                 <div class="pt-2">
                                     <div class="flex justify-between text-sm mb-1">
@@ -663,32 +907,22 @@
 
         function viewMonth(mes) {
             const conteudosMes = conteudos.filter(c => c.mes === mes);
-            const detail = document.getElementById('month-detail');
-            const title = document.getElementById('month-detail-title');
-            const content = document.getElementById('month-detail-content');
-            
-            detail.classList.remove('hidden');
-            title.textContent = `Conteúdos de ${formatMonth(mes)}`;
-            
-            content.innerHTML = `
+            document.getElementById('month-detail').classList.remove('hidden');
+            document.getElementById('month-detail-title').textContent = `Conteúdos de ${formatMonth(mes)}`;
+            document.getElementById('month-detail-content').innerHTML = `
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                     ${conteudosMes.map(c => renderContentCard(c)).join('')}
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="exportMonth('${mes}')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                        <i class="fas fa-download mr-2"></i>Exportar
-                    </button>
-                </div>
             `;
-            
-            detail.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('month-detail').scrollIntoView({ behavior: 'smooth' });
         }
 
         function closeMonthDetail() {
             document.getElementById('month-detail').classList.add('hidden');
         }
 
-        // Calendário Atualizado
+        // ==================== CALENDÁRIO ====================
+
         function renderCalendario(container) {
             const ano = currentCalendarDate.getFullYear();
             const mes = currentCalendarDate.getMonth();
@@ -700,26 +934,19 @@
             
             const mesStr = `${ano}-${String(mes + 1).padStart(2, '0')}`;
             const conteudosMes = conteudos.filter(c => c.mes === mesStr);
-            
-            // Obter todos os meses únicos para o seletor
             const todosMeses = [...new Set(conteudos.map(c => c.mes))].sort();
             
             let diasHTML = '';
             const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
             
-            // Headers
             diasHTML += diasSemana.map(d => `
-                <div class="bg-gray-50 p-3 text-center text-sm font-semibold text-gray-600 border-b border-gray-200">
-                    ${d}
-                </div>
+                <div class="bg-gray-50 p-3 text-center text-sm font-semibold text-gray-600 border-b border-gray-200">${d}</div>
             `).join('');
 
-            // Empty cells before start
             for (let i = 0; i < diaSemanaInicio; i++) {
                 diasHTML += '<div class="calendar-day bg-gray-50"></div>';
             }
 
-            // Days
             const hoje = new Date();
             for (let dia = 1; dia <= diasNoMes; dia++) {
                 const dataStr = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
@@ -733,7 +960,7 @@
                             ${conteudosDia.map(c => `
                                 <div onclick="editContent(${c.id})" class="text-xs p-2 rounded cursor-pointer hover:opacity-80 transition-opacity ${getFunilColor(c.funil)} text-white truncate" title="${c.titulo}">
                                     <div class="font-medium truncate">${c.titulo}</div>
-                                    <div class="text-xs opacity-90">${c.canal} • ${c.quadro}</div>
+                                    <div class="text-xs opacity-90">${c.canal}</div>
                                 </div>
                             `).join('')}
                         </div>
@@ -745,11 +972,9 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-6 border-b border-gray-100 flex flex-wrap items-center justify-between gap-4">
                         <div class="flex items-center gap-4">
-                            <div class="flex items-center gap-2">
-                                <select id="calendar-month-selector" onchange="jumpToMonth()" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-900">
-                                    ${todosMeses.map(m => `<option value="${m}" ${m === mesStr ? 'selected' : ''}>${formatMonth(m)}</option>`).join('')}
-                                </select>
-                            </div>
+                            <select id="calendar-month-selector" onchange="jumpToMonth()" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-900">
+                                ${todosMeses.map(m => `<option value="${m}" ${m === mesStr ? 'selected' : ''}>${formatMonth(m)}</option>`).join('')}
+                            </select>
                             <div class="flex gap-2">
                                 <button onclick="changeCalendarMonth(-1)" class="w-10 h-10 rounded-lg hover:bg-gray-100 flex items-center justify-center border border-gray-200">
                                     <i class="fas fa-chevron-left text-gray-600"></i>
@@ -757,59 +982,11 @@
                                 <button onclick="changeCalendarMonth(1)" class="w-10 h-10 rounded-lg hover:bg-gray-100 flex items-center justify-center border border-gray-200">
                                     <i class="fas fa-chevron-right text-gray-600"></i>
                                 </button>
-                                <button onclick="goToCurrentMonth()" class="px-4 py-2 rounded-lg hover:bg-gray-100 border border-gray-200 text-sm font-medium text-gray-700">
-                                    Hoje
-                                </button>
+                                <button onclick="goToCurrentMonth()" class="px-4 py-2 rounded-lg hover:bg-gray-100 border border-gray-200 text-sm font-medium text-gray-700">Hoje</button>
                             </div>
                         </div>
-                        
-                        <div class="flex flex-wrap gap-3">
-                            <select id="filter-canal" onchange="renderCalendario(document.getElementById('content-container'))" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option value="">Todos Canais</option>
-                                <option value="Instagram">Instagram</option>
-                                <option value="YouTube">YouTube</option>
-                            </select>
-                            
-                            <select id="filter-responsavel" onchange="renderCalendario(document.getElementById('content-container'))" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option value="">Todos Responsáveis</option>
-                                <option value="Talles">Talles</option>
-                                <option value="Andre">Andre</option>
-                            </select>
-                            
-                            <select id="filter-status" onchange="renderCalendario(document.getElementById('content-container'))" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option value="">Todos Status</option>
-                                <option value="Ideia">Ideia</option>
-                                <option value="Roteiro">Roteiro</option>
-                                <option value="Gravando">Gravando</option>
-                                <option value="Editando">Editando</option>
-                                <option value="Agendado">Agendado</option>
-                                <option value="Publicado">Publicado</option>
-                            </select>
-                        </div>
                     </div>
-                    
-                    <div class="calendar-grid" id="calendar-grid">
-                        ${diasHTML}
-                    </div>
-                </div>
-
-                <div class="mt-6 flex gap-6 justify-center flex-wrap">
-                    <div class="flex items-center gap-2">
-                        <div class="w-4 h-4 rounded bg-green-500"></div>
-                        <span class="text-sm text-gray-600">Topo</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-4 h-4 rounded bg-blue-500"></div>
-                        <span class="text-sm text-gray-600">Meio</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-4 h-4 rounded bg-red-500"></div>
-                        <span class="text-sm text-gray-600">Fundo</span>
-                    </div>
-                    <div class="flex items-center gap-2 ml-4">
-                        <div class="w-4 h-4 rounded border-2 border-indigo-500 bg-indigo-50"></div>
-                        <span class="text-sm text-gray-600">Hoje</span>
-                    </div>
+                    <div class="calendar-grid">${diasHTML}</div>
                 </div>
             `;
         }
@@ -831,7 +1008,8 @@
             renderCalendario(document.getElementById('content-container'));
         }
 
-        // Pipeline (Kanban)
+        // ==================== PIPELINE ====================
+
         function renderPipeline(container) {
             const statusList = ['Ideia', 'Roteiro', 'Gravando', 'Editando', 'Agendado', 'Publicado'];
             
@@ -849,15 +1027,9 @@
                                     </h3>
                                     <span class="bg-gray-200 text-gray-600 text-xs font-bold px-2 py-1 rounded-full">${items.length}</span>
                                 </div>
-                                
-                                <div class="kanban-column space-y-3" 
-                                     ondragover="handleDragOver(event)" 
-                                     ondrop="handleDrop(event, '${status}')"
-                                     ondragleave="handleDragLeave(event)">
+                                <div class="kanban-column space-y-3" ondragover="handleDragOver(event)" ondrop="handleDrop(event, '${status}')" ondragleave="handleDragLeave(event)">
                                     ${items.map(c => `
-                                        <div draggable="true" 
-                                             ondragstart="handleDragStart(event, ${c.id})" 
-                                             ondragend="handleDragEnd(event)"
+                                        <div draggable="true" ondragstart="handleDragStart(event, ${c.id})" ondragend="handleDragEnd(event)"
                                              class="bg-white rounded-xl p-4 shadow-sm border border-gray-200 cursor-move hover:shadow-md transition-shadow priority-${c.prioridade}"
                                              onclick="editContent(${c.id})">
                                             <div class="flex justify-between items-start mb-2">
@@ -865,11 +1037,7 @@
                                                 <span class="text-xs text-gray-400">${c.responsavel}</span>
                                             </div>
                                             <h4 class="font-semibold text-gray-900 mb-2 line-clamp-2">${c.titulo}</h4>
-                                            <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
-                                                <span>${c.canal}</span>
-                                                <span>${formatDate(c.dataPrevista)}</span>
-                                            </div>
-                                            <div class="text-xs text-indigo-600 font-medium truncate">${c.quadro}</div>
+                                            <div class="text-xs text-gray-500">${c.canal} • ${formatDate(c.dataPrevista)}</div>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -881,7 +1049,6 @@
             `;
         }
 
-        // Drag and Drop Handlers
         function handleDragStart(e, id) {
             draggedItem = id;
             e.target.classList.add('dragging');
@@ -909,13 +1076,14 @@
                 if (content) {
                     content.status = newStatus;
                     content.atualizadoEm = new Date().toISOString();
-                    saveData();
+                    saveUserData();
                     renderPipeline(document.getElementById('content-container'));
                 }
             }
         }
 
-        // Métricas
+        // ==================== MÉTRICAS ====================
+
         function renderMetricas(container) {
             const hoje = new Date();
             const mesAtual = hoje.toISOString().slice(0, 7);
@@ -924,20 +1092,11 @@
             const porCanal = {};
             const porFunil = { Topo: 0, Meio: 0, Fundo: 0 };
             const porResponsavel = { Talles: 0, Andre: 0 };
-            const porQuadro = {};
             
             conteudosMes.forEach(c => {
                 porCanal[c.canal] = (porCanal[c.canal] || 0) + 1;
                 porFunil[c.funil]++;
                 porResponsavel[c.responsavel]++;
-                porQuadro[c.quadro] = (porQuadro[c.quadro] || 0) + 1;
-            });
-
-            const semanas = {};
-            conteudosMes.forEach(c => {
-                const data = new Date(c.dataPrevista);
-                const semana = Math.ceil(data.getDate() / 7);
-                semanas[`Semana ${semana}`] = (semanas[`Semana ${semana}`] || 0) + 1;
             });
 
             container.innerHTML = `
@@ -946,179 +1105,59 @@
                         <h3 class="text-lg font-bold text-gray-900 mb-4">Conteúdos por Canal</h3>
                         <canvas id="chartCanal"></canvas>
                     </div>
-                    
                     <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                         <h3 class="text-lg font-bold text-gray-900 mb-4">Distribuição por Funil</h3>
                         <canvas id="chartFunil"></canvas>
-                    </div>
-                    
-                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">Frequência Semanal</h3>
-                        <canvas id="chartSemanal"></canvas>
-                    </div>
-                    
-                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">Produção por Responsável</h3>
-                        <canvas id="chartResponsavel"></canvas>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
-                    <h3 class="text-lg font-bold text-gray-900 mb-6">Distribuição por Quadro/Tema</h3>
-                    <div class="space-y-4">
-                        ${Object.entries(porQuadro).sort((a, b) => b[1] - a[1]).map(([quadro, count]) => `
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                <span class="font-medium text-gray-700">${quadro}</span>
-                                <span class="font-bold text-indigo-600">${count} conteúdos</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                    <h3 class="text-lg font-bold text-gray-900 mb-6">Resumo do Mês</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div class="text-center p-4 bg-gray-50 rounded-xl">
-                            <p class="text-3xl font-bold text-indigo-600">${conteudosMes.length}</p>
-                            <p class="text-sm text-gray-600 mt-1">Total Planejado</p>
-                        </div>
-                        <div class="text-center p-4 bg-green-50 rounded-xl">
-                            <p class="text-3xl font-bold text-green-600">${conteudosMes.filter(c => c.status === 'Publicado').length}</p>
-                            <p class="text-sm text-gray-600 mt-1">Publicados</p>
-                        </div>
-                        <div class="text-center p-4 bg-blue-50 rounded-xl">
-                            <p class="text-3xl font-bold text-blue-600">${conteudosMes.filter(c => c.status === 'Agendado').length}</p>
-                            <p class="text-sm text-gray-600 mt-1">Agendados</p>
-                        </div>
-                        <div class="text-center p-4 bg-purple-50 rounded-xl">
-                            <p class="text-3xl font-bold text-purple-600">${Math.round((conteudosMes.filter(c => c.status === 'Publicado').length / (conteudosMes.length || 1)) * 100)}%</p>
-                            <p class="text-sm text-gray-600 mt-1">Taxa de Execução</p>
-                        </div>
                     </div>
                 </div>
             `;
 
             setTimeout(() => {
-                // Canal Chart
                 new Chart(document.getElementById('chartCanal'), {
                     type: 'bar',
                     data: {
                         labels: Object.keys(porCanal),
-                        datasets: [{
-                            label: 'Conteúdos',
-                            data: Object.values(porCanal),
-                            backgroundColor: '#6366f1',
-                            borderRadius: 6
-                        }]
+                        datasets: [{ label: 'Conteúdos', data: Object.values(porCanal), backgroundColor: '#6366f1', borderRadius: 6 }]
                     },
                     options: { responsive: true, plugins: { legend: { display: false } } }
                 });
 
-                // Funil Chart
                 new Chart(document.getElementById('chartFunil'), {
                     type: 'pie',
                     data: {
                         labels: ['Topo', 'Meio', 'Fundo'],
-                        datasets: [{
-                            data: [porFunil.Topo, porFunil.Meio, porFunil.Fundo],
-                            backgroundColor: ['#10b981', '#3b82f6', '#ef4444']
-                        }]
-                    }
-                });
-
-                // Semanal Chart
-                new Chart(document.getElementById('chartSemanal'), {
-                    type: 'line',
-                    data: {
-                        labels: Object.keys(semanas).sort(),
-                        datasets: [{
-                            label: 'Conteúdos',
-                            data: Object.values(semanas),
-                            borderColor: '#8b5cf6',
-                            tension: 0.4,
-                            fill: true,
-                            backgroundColor: 'rgba(139, 92, 246, 0.1)'
-                        }]
-                    }
-                });
-
-                // Responsavel Chart
-                new Chart(document.getElementById('chartResponsavel'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Talles', 'Andre'],
-                        datasets: [{
-                            data: [porResponsavel.Talles, porResponsavel.Andre],
-                            backgroundColor: ['#f59e0b', '#ec4899']
-                        }]
+                        datasets: [{ data: [porFunil.Topo, porFunil.Meio, porFunil.Fundo], backgroundColor: ['#10b981', '#3b82f6', '#ef4444'] }]
                     }
                 });
             }, 100);
         }
 
-        // Banco de Conteúdos
+        // ==================== BANCO DE CONTEÚDOS ====================
+
         function renderBanco(container) {
             container.innerHTML = `
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="p-4 border-b border-gray-100 flex flex-wrap gap-4 items-center justify-between">
-                        <div class="flex gap-2">
-                            <input type="text" id="banco-search" placeholder="Buscar..." class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" onkeyup="filterBanco()">
-                        </div>
-                        <div class="flex gap-2">
-                            <select id="banco-filter-status" onchange="filterBanco()" class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
-                                <option value="">Todos Status</option>
-                                <option value="Ideia">Ideia</option>
-                                <option value="Roteiro">Roteiro</option>
-                                <option value="Gravando">Gravando</option>
-                                <option value="Editando">Editando</option>
-                                <option value="Agendado">Agendado</option>
-                                <option value="Publicado">Publicado</option>
-                            </select>
-                            <select id="banco-filter-quadro" onchange="filterBanco()" class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
-                                <option value="">Todos Quadros</option>
-                                <option value="Economia na Vida Real">Economia na Vida Real</option>
-                                <option value="Decisões Invisíveis">Decisões Invisíveis</option>
-                                <option value="30 Formas de Explicar Economia">30 Formas de Explicar Economia</option>
-                                <option value="Efeito Borboleta">Efeito Borboleta</option>
-                                <option value="O que essa notícia muda na sua vida?">O que essa notícia muda na sua vida?</option>
-                                <option value="Política sem Paixão">Política sem Paixão</option>
-                                <option value="Respondendo Comentários">Respondendo Comentários</option>
-                                <option value="Conversa na Rua">Conversa na Rua</option>
-                                <option value="Bastidores">Bastidores</option>
-                                <option value="É Novo Aqui?">É Novo Aqui?</option>
-                                <option value="O que é Economia?">O que é Economia?</option>
-                                <option value="Manifesto">Manifesto</option>
-                                <option value="Eventual">Eventual</option>
-                            </select>
-                        </div>
+                    <div class="p-4 border-b border-gray-100">
+                        <input type="text" id="banco-search" placeholder="Buscar..." class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" onkeyup="filterBanco()">
                     </div>
-                    
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
                             <thead class="bg-gray-50 text-gray-600 text-sm uppercase">
                                 <tr>
-                                    <th class="px-6 py-3 font-semibold">Título</th>
-                                    <th class="px-6 py-3 font-semibold">Canal</th>
-                                    <th class="px-6 py-3 font-semibold">Tipo</th>
-                                    <th class="px-6 py-3 font-semibold">Quadro</th>
-                                    <th class="px-6 py-3 font-semibold">Funil</th>
-                                    <th class="px-6 py-3 font-semibold">Status</th>
-                                    <th class="px-6 py-3 font-semibold">Responsável</th>
-                                    <th class="px-6 py-3 font-semibold">Data</th>
-                                    <th class="px-6 py-3 font-semibold">Ações</th>
+                                    <th class="px-6 py-3">Título</th>
+                                    <th class="px-6 py-3">Canal</th>
+                                    <th class="px-6 py-3">Tipo</th>
+                                    <th class="px-6 py-3">Status</th>
+                                    <th class="px-6 py-3">Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="banco-table-body" class="divide-y divide-gray-100">
                                 ${conteudos.map(c => `
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-6 py-4 font-medium text-gray-900">${c.titulo}</td>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 font-medium">${c.titulo}</td>
                                         <td class="px-6 py-4 text-gray-600">${c.canal}</td>
                                         <td class="px-6 py-4 text-gray-600">${c.tipo}</td>
-                                        <td class="px-6 py-4 text-gray-600 text-sm">${c.quadro}</td>
-                                        <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${getFunilBadge(c.funil)}">${c.funil}</span></td>
                                         <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span></td>
-                                        <td class="px-6 py-4 text-gray-600">${c.responsavel}</td>
-                                        <td class="px-6 py-4 text-gray-600">${formatDate(c.dataPrevista)}</td>
                                         <td class="px-6 py-4">
                                             <button onclick="editContent(${c.id})" class="text-indigo-600 hover:text-indigo-800 mr-2"><i class="fas fa-edit"></i></button>
                                             <button onclick="deleteContent(${c.id})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
@@ -1134,27 +1173,14 @@
 
         function filterBanco() {
             const search = document.getElementById('banco-search').value.toLowerCase();
-            const status = document.getElementById('banco-filter-status').value;
-            const quadro = document.getElementById('banco-filter-quadro').value;
+            const filtered = conteudos.filter(c => c.titulo.toLowerCase().includes(search));
             
-            const filtered = conteudos.filter(c => {
-                const matchSearch = c.titulo.toLowerCase().includes(search) || c.canal.toLowerCase().includes(search) || c.quadro.toLowerCase().includes(search);
-                const matchStatus = !status || c.status === status;
-                const matchQuadro = !quadro || c.quadro === quadro;
-                return matchSearch && matchStatus && matchQuadro;
-            });
-            
-            const tbody = document.getElementById('banco-table-body');
-            tbody.innerHTML = filtered.map(c => `
-                <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="px-6 py-4 font-medium text-gray-900">${c.titulo}</td>
+            document.getElementById('banco-table-body').innerHTML = filtered.map(c => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium">${c.titulo}</td>
                     <td class="px-6 py-4 text-gray-600">${c.canal}</td>
                     <td class="px-6 py-4 text-gray-600">${c.tipo}</td>
-                    <td class="px-6 py-4 text-gray-600 text-sm">${c.quadro}</td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${getFunilBadge(c.funil)}">${c.funil}</span></td>
                     <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span></td>
-                    <td class="px-6 py-4 text-gray-600">${c.responsavel}</td>
-                    <td class="px-6 py-4 text-gray-600">${formatDate(c.dataPrevista)}</td>
                     <td class="px-6 py-4">
                         <button onclick="editContent(${c.id})" class="text-indigo-600 hover:text-indigo-800 mr-2"><i class="fas fa-edit"></i></button>
                         <button onclick="deleteContent(${c.id})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
@@ -1163,7 +1189,8 @@
             `).join('');
         }
 
-        // Helper Functions
+        // ==================== MODAL & HELPERS ====================
+
         function renderContentCard(c) {
             return `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer priority-${c.prioridade}" onclick="editContent(${c.id})">
@@ -1172,12 +1199,11 @@
                         <span class="text-xs text-gray-400">${c.responsavel}</span>
                     </div>
                     <h4 class="font-semibold text-gray-900 mb-2 line-clamp-2">${c.titulo}</h4>
-                    <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
+                    <div class="flex items-center justify-between text-xs text-gray-500">
                         <span>${c.canal}</span>
                         <span>${formatDate(c.dataPrevista)}</span>
                     </div>
-                    <div class="text-xs text-indigo-600 font-medium truncate mb-2">${c.quadro}</div>
-                    <div class="flex items-center justify-between">
+                    <div class="mt-2 flex items-center justify-between">
                         <span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span>
                         ${c.prioridade === 'Alta' ? '<i class="fas fa-flag text-red-500"></i>' : ''}
                     </div>
@@ -1195,49 +1221,36 @@
 
         function getStatusClass(status) {
             const classes = {
-                'Ideia': 'status-ideia',
-                'Roteiro': 'status-roteiro',
-                'Gravando': 'status-gravando',
-                'Editando': 'status-editando',
-                'Agendado': 'status-agendado',
-                'Publicado': 'status-publicado'
+                'Ideia': 'status-ideia', 'Roteiro': 'status-roteiro', 'Gravando': 'status-gravando',
+                'Editando': 'status-editando', 'Agendado': 'status-agendado', 'Publicado': 'status-publicado'
             };
             return classes[status] || 'bg-gray-100 text-gray-600';
         }
 
         function getStatusDot(status) {
             const colors = {
-                'Ideia': 'bg-gray-400',
-                'Roteiro': 'bg-blue-400',
-                'Gravando': 'bg-yellow-400',
-                'Editando': 'bg-pink-400',
-                'Agendado': 'bg-green-400',
-                'Publicado': 'bg-indigo-400'
+                'Ideia': 'bg-gray-400', 'Roteiro': 'bg-blue-400', 'Gravando': 'bg-yellow-400',
+                'Editando': 'bg-pink-400', 'Agendado': 'bg-green-400', 'Publicado': 'bg-indigo-400'
             };
             return colors[status] || 'bg-gray-400';
         }
 
         function formatMonth(mesStr) {
             const [ano, mes] = mesStr.split('-');
-            const data = new Date(ano, mes - 1);
-            return data.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+            return new Date(ano, mes - 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
         }
 
         function formatDate(dateStr) {
             return new Date(dateStr).toLocaleDateString('pt-BR');
         }
 
-        // Modal Functions
         function openModal(id = null) {
             const modal = document.getElementById('content-modal');
-            const form = document.getElementById('content-form');
-            const title = document.getElementById('modal-title');
-            
             modal.classList.remove('hidden');
             
             if (id) {
                 const c = conteudos.find(x => x.id === id);
-                title.textContent = 'Editar Conteúdo';
+                document.getElementById('modal-title').textContent = 'Editar Conteúdo';
                 document.getElementById('content-id').value = c.id;
                 document.getElementById('titulo').value = c.titulo;
                 document.getElementById('mes').value = c.mes;
@@ -1256,12 +1269,11 @@
                 document.getElementById('roteiro').value = c.roteiro || '';
                 document.getElementById('observacoes').value = c.observacoes || '';
             } else {
-                title.textContent = 'Novo Conteúdo';
-                form.reset();
+                document.getElementById('modal-title').textContent = 'Novo Conteúdo';
+                document.getElementById('content-form').reset();
                 document.getElementById('content-id').value = '';
                 document.getElementById('mes').value = new Date().toISOString().slice(0, 7);
                 document.getElementById('data-prevista').value = new Date().toISOString().split('T')[0];
-                document.getElementById('responsavel').value = currentUser;
                 document.getElementById('quadro').value = 'Eventual';
             }
         }
@@ -1303,7 +1315,7 @@
                 conteudos.push(data);
             }
             
-            saveData();
+            saveUserData();
             closeModal();
             navigateTo(currentPage);
         }
@@ -1313,9 +1325,9 @@
         }
 
         function deleteContent(id) {
-            if (confirm('Tem certeza que deseja excluir este conteúdo?')) {
+            if (confirm('Deseja excluir este conteúdo?')) {
                 conteudos = conteudos.filter(c => c.id !== id);
-                saveData();
+                saveUserData();
                 navigateTo(currentPage);
             }
         }
@@ -1328,25 +1340,14 @@
                 const container = document.getElementById('content-container');
                 container.innerHTML = `
                     <div class="mb-4 flex items-center justify-between">
-                        <h3 class="text-lg font-bold text-gray-900">Resultados da Busca: "${e.target.value}"</h3>
-                        <button onclick="navigateTo('${currentPage}')" class="text-indigo-600 hover:text-indigo-800">Limpar</button>
+                        <h3 class="text-lg font-bold text-gray-900">Resultados: "${e.target.value}"</h3>
+                        <button onclick="navigateTo('${currentPage}')" class="text-indigo-600">Limpar</button>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         ${filtered.map(c => renderContentCard(c)).join('')}
                     </div>
                 `;
             }
-        }
-
-        function toggleUser() {
-            currentUser = currentUser === 'Talles' ? 'Andre' : 'Talles';
-            document.querySelector('.fa-exchange-alt').parentElement.previousElementSibling.querySelector('p').textContent = currentUser;
-            document.querySelector('.fa-exchange-alt').parentElement.previousElementSibling.previousElementSibling.textContent = currentUser[0];
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('-translate-x-full');
         }
 
         function createNewMonth() {
@@ -1363,57 +1364,30 @@
             
             const ultimoMes = meses[meses.length - 1];
             const [ano, mes] = ultimoMes.split('-').map(Number);
-            let novoAno = ano;
-            let novoMes = mes + 1;
-            
-            if (novoMes > 12) {
-                novoMes = 1;
-                novoAno++;
-            }
+            let novoAno = ano, novoMes = mes + 1;
+            if (novoMes > 12) { novoMes = 1; novoAno++; }
             
             const novoMesStr = `${novoAno}-${String(novoMes).padStart(2, '0')}`;
-            const conteudosUltimoMes = conteudos.filter(c => c.mes === ultimoMes);
             
-            conteudosUltimoMes.forEach(c => {
+            conteudos.filter(c => c.mes === ultimoMes).forEach(c => {
                 const novo = { ...c };
                 novo.id = Date.now() + Math.random();
                 novo.mes = novoMesStr;
                 novo.status = 'Ideia';
-                novo.criadoEm = new Date().toISOString();
-                novo.atualizadoEm = new Date().toISOString();
-                
                 const data = new Date(c.dataPrevista);
                 data.setMonth(data.getMonth() + 1);
                 novo.dataPrevista = data.toISOString().split('T')[0];
-                
+                novo.criadoEm = new Date().toISOString();
+                novo.atualizadoEm = new Date().toISOString();
                 conteudos.push(novo);
             });
             
-            saveData();
+            saveUserData();
             navigateTo('meses');
         }
 
-        function exportMonth(mes) {
-            const data = conteudos.filter(c => c.mes === mes);
-            const csv = convertToCSV(data);
-            downloadCSV(csv, `conteudos-${mes}.csv`);
-        }
-
-        function convertToCSV(data) {
-            const headers = ['ID', 'Título', 'Mês', 'Data Prevista', 'Canal', 'Tipo', 'Quadro', 'Funil', 'Objetivo', 'Responsável', 'Status', 'Prioridade'];
-            const rows = data.map(c => [
-                c.id, c.titulo, c.mes, c.dataPrevista, c.canal, c.tipo, c.quadro, c.funil, c.objetivo, c.responsavel, c.status, c.prioridade
-            ]);
-            return [headers, ...rows].map(row => row.join(',')).join('\n');
-        }
-
-        function downloadCSV(csv, filename) {
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
         }
     </script>
 </body>
