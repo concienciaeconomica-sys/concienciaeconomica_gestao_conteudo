@@ -205,7 +205,6 @@
             transform: translateX(24px);
         }
 
-        /* ESTILOS NOVOS PARA UPLOAD E LISTAS EDITÁVEIS */
         .upload-zone {
             border: 2px dashed #d1d5db;
             border-radius: 12px;
@@ -285,7 +284,95 @@
         [data-theme="dark"] .editable-list-item input {
             color: #f9fafb;
         }
+
+        [data-theme="dark"] .card {
+            background-color: #1f2937;
+            border-color: #374151;
+        }
+        
+        [data-theme="dark"] .bg-gray-50 {
+            background-color: #374151 !important;
+        }
+        
+        [data-theme="dark"] .bg-gray-100 {
+            background-color: #374151 !important;
+        }
+        
+        [data-theme="dark"] .bg-gray-200 {
+            background-color: #4b5563 !important;
+        }
+        
+        [data-theme="dark"] .bg-gray-800 {
+            background-color: #111827 !important;
+        }
+        
+        [data-theme="dark"] .text-gray-600 {
+            color: #9ca3af !important;
+        }
+        
+        [data-theme="dark"] .text-gray-700 {
+            color: #d1d5db !important;
+        }
+        
+        [data-theme="dark"] .text-gray-900 {
+            color: #f9fafb !important;
+        }
+        
+        [data-theme="dark"] .border-gray-100 {
+            border-color: #374151 !important;
+        }
+        
+        [data-theme="dark"] .border-gray-200 {
+            border-color: #374151 !important;
+        }
+        
+        [data-theme="dark"] .border-gray-700 {
+            border-color: #4b5563 !important;
+        }
+
+        [data-theme="dark"] .hover\:bg-gray-50:hover {
+            background-color: #374151 !important;
+        }
+        
+        [data-theme="dark"] .hover\:bg-gray-100:hover {
+            background-color: #374151 !important;
+        }
+        
+        [data-theme="dark"] .hover\:bg-gray-700:hover {
+            background-color: #4b5563 !important;
+        }
+
+        [data-theme="dark"] .hover\:bg-gray-800\/50:hover {
+            background-color: rgba(55, 65, 81, 0.5) !important;
+        }
+
+        [data-theme="dark"] .calendar-day {
+            background-color: #1f2937;
+        }
+
+        [data-theme="dark"] .kanban-column {
+            background-color: #374151 !important;
+        }
+
+        [data-theme="dark"] .glass {
+            background: rgba(31, 41, 55, 0.95);
+        }
+
+        [data-theme="dark"] #sidebar {
+            background-color: #111827;
+            border-color: #374151;
+        }
+
+        [data-theme="dark"] main {
+            background-color: #111827;
+        }
+
+        [data-theme="dark"] .upload-zone:hover,
+        [data-theme="dark"] .upload-zone.dragover {
+            background-color: rgba(99, 102, 241, 0.1);
+        }
     </style>
+<base target="_blank">
 </head>
 <body class="h-screen overflow-hidden">
 
@@ -448,7 +535,6 @@
                     <i class="fas fa-crown w-5"></i>
                     <span class="font-medium">Marca</span>
                 </button>
-                <!-- NOVA ABA CONFIGURAÇÕES -->
                 <button onclick="navigateTo('configuracoes')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 transition-colors" data-page="configuracoes">
                     <i class="fas fa-cog w-5"></i>
                     <span class="font-medium">Configurações</span>
@@ -670,6 +756,7 @@
     </div>
 
     <script>
+
         // ==================== FIREBASE CONFIG ====================
         const firebaseConfig = {
             apiKey: "AIzaSyAV2tQYhyZigwECLfj3xSMS1b7rBPRAnZg",
@@ -692,9 +779,9 @@
         let draggedItem = null;
         let currentCalendarDate = new Date();
         let dashboardSelectedMonth = new Date().toISOString().slice(0, 7);
+        let metricasSelectedMonth = new Date().toISOString().slice(0, 7);
         let unsubscribeSnapshot = null;
         
-        // Configurações expandidas com Objetivo
         let userSettings = {
             theme: 'light',
             canais: ['Instagram', 'YouTube', 'TikTok', 'LinkedIn', 'Twitter', 'Blog'],
@@ -703,7 +790,6 @@
             objetivos: ['Venda', 'Autoridade', 'Conexão', 'Engajamento', 'Educação', 'Evento']
         };
 
-        // Marca Data com arquivos
         let marcaData = {
             fundamentos: { proposito: '', missao: '', visao: '', valores: '', posicionamento: '', promessa: '', diferencial: '' },
             publico: { publicoAlvo: '', persona: '', dores: '', desejos: '', linguagem: '', objecoes: '' },
@@ -1007,38 +1093,6 @@
             showLoading(false);
         }
 
-        async function duplicateLastMonth() {
-            const meses = [...new Set(conteudos.map(c => c.mes))].sort();
-            if (meses.length === 0) {
-                alert('Não há meses anteriores para duplicar.');
-                return;
-            }
-            showLoading(true);
-            const ultimoMes = meses[meses.length - 1];
-            const [ano, mes] = ultimoMes.split('-').map(Number);
-            let novoAno = ano, novoMes = mes + 1;
-            if (novoMes > 12) { novoMes = 1; novoAno++; }
-            const novoMesStr = `${novoAno}-${String(novoMes).padStart(2, '0')}`;
-            
-            conteudos.filter(c => c.mes === ultimoMes).forEach(c => {
-                const novo = { ...c };
-                novo.id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
-                novo.mes = novoMesStr;
-                novo.status = 'Ideia';
-                novo.datasStatus = { Ideia: '', Roteiro: '', Gravando: '', Editando: '', Agendado: '', Publicado: '' };
-                const data = new Date(c.dataPrevista);
-                data.setMonth(data.getMonth() + 1);
-                novo.dataPrevista = data.toISOString().split('T')[0];
-                novo.criadoEm = new Date().toISOString();
-                novo.atualizadoEm = new Date().toISOString();
-                conteudos.push(novo);
-            });
-            
-            await saveUserData();
-            navigateTo('meses');
-            showLoading(false);
-        }
-
         // ==================== DRAG AND DROP ====================
         async function handleDrop(e, newStatus) {
             e.preventDefault();
@@ -1071,7 +1125,7 @@
             e.currentTarget.classList.remove('drag-over'); 
         }
 
-        // ==================== RENDER FUNCTIONS ====================
+        // ==================== NAVIGATION & RENDER ====================
         function navigateTo(page) {
             currentPage = page;
             document.querySelectorAll('.nav-item').forEach(item => {
@@ -1113,10 +1167,6 @@
             }
         }
 
-        // [Continuação das funções de renderização...]
-        // As funções renderDashboard, renderCalendario, renderPipeline, renderBanco, 
-        // renderBancoDados, renderMetricas, renderInsights permanecem iguais ao original
-        
         function renderDashboard(container) {
             const hoje = new Date();
             const mesAtual = hoje.toISOString().slice(0, 7);
@@ -1253,6 +1303,9 @@
             const conteudosMes = conteudos.filter(c => c.mes === mesStr);
             const todosMeses = [...new Set(conteudos.map(c => c.mes))].sort();
             
+            const nomeMes = new Date(ano, mes).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+            const nomeMesCapitalizado = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
+            
             let diasHTML = '';
             const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
             diasHTML += diasSemana.map(d => `<div class="bg-gray-50 dark:bg-gray-800 p-3 text-center text-sm font-semibold text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">${d}</div>`).join('');
@@ -1273,6 +1326,9 @@
             container.innerHTML = `
                 <div class="card rounded-2xl shadow-sm border overflow-hidden">
                     <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">${nomeMesCapitalizado}</h3>
+                        </div>
                         <div class="flex items-center gap-4">
                             <select id="calendar-month-selector" onchange="jumpToMonth()" class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-900 dark:text-white">
                                 ${todosMeses.length === 0 ? `<option value="${mesStr}" selected>${formatMonth(mesStr)}</option>` : ''}
@@ -1476,7 +1532,10 @@
         function renderMetricas(container) {
             const hoje = new Date();
             const mesAtual = hoje.toISOString().slice(0, 7);
-            const conteudosMes = conteudos.filter(c => c.mes === mesAtual);
+            const mesSelecionado = metricasSelectedMonth || mesAtual;
+            const todosMeses = [...new Set(conteudos.map(c => c.mes))].sort().reverse();
+            
+            const conteudosMes = conteudos.filter(c => c.mes === mesSelecionado);
             const porCanal = {};
             const porFunil = { Topo: 0, Meio: 0, Fundo: 0 };
             const porResponsavel = {};
@@ -1490,6 +1549,18 @@
             });
 
             container.innerHTML = `
+                <div class="mb-6">
+                    <div class="card rounded-2xl p-4 shadow-sm border flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-calendar-alt text-indigo-600 text-xl"></i>
+                            <span class="font-medium text-gray-700 dark:text-gray-300">Mês selecionado:</span>
+                        </div>
+                        <select id="metricas-month-selector" onchange="changeMetricasMonth(this.value)" class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-900 dark:text-white">
+                            ${todosMeses.length === 0 ? `<option value="${mesAtual}" selected>${formatMonth(mesAtual)}</option>` : ''}
+                            ${todosMeses.map(m => `<option value="${m}" ${m === mesSelecionado ? 'selected' : ''}>${formatMonth(m)} ${m === mesAtual ? '(Atual)' : ''}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <div class="card rounded-2xl p-6 shadow-sm border"><h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Conteúdos por Canal</h3><canvas id="chartCanal"></canvas></div>
                     <div class="card rounded-2xl p-6 shadow-sm border"><h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Distribuição por Funil</h3><canvas id="chartFunil"></canvas></div>
@@ -1512,6 +1583,12 @@
                 }
             }, 100);
         }
+
+        function changeMetricasMonth(month) {
+            metricasSelectedMonth = month;
+            renderMetricas(document.getElementById('content-container'));
+        }
+
 
         function renderInsights(container) {
             container.innerHTML = `
@@ -1604,7 +1681,6 @@
                 </div>`;
         }
 
-        // ==================== NOVA FUNÇÃO: RENDER MARCA COM UPLOAD ====================
         function renderMarca(container) {
             const sections = [
                 { id: 'fundamentos', title: 'Fundamentos', icon: 'fa-bullseye', fields: [
@@ -1687,7 +1763,6 @@
                         `).join('')}
                     </div>
 
-                    <!-- NOVA SEÇÃO: UPLOAD DE ARQUIVOS PDF -->
                     <div class="card rounded-2xl shadow-sm border overflow-hidden mt-8">
                         <div class="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20">
                             <div class="flex items-center gap-3">
@@ -1702,16 +1777,14 @@
                         </div>
                         
                         <div class="p-6">
-                            <!-- Zona de Upload -->
                             <div id="upload-zone" class="upload-zone mb-6" ondrop="handleFileDrop(event)" ondragover="handleFileDragOver(event)" ondragleave="handleFileDragLeave(event)" onclick="document.getElementById('file-input').click()">
                                 <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
                                 <p class="text-gray-600 dark:text-gray-300 font-medium mb-1">Arraste arquivos PDF aqui</p>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">ou clique para selecionar</p>
-                                <p class="text-xs text-gray-400 mt-2">Máximo 60MB por arquivo • Múltiplos arquivos permitidos</p>
+                                <p class="text-xs text-gray-400 mt-2">Máximo 60MB por arquivo</p>
                                 <input type="file" id="file-input" class="hidden" accept=".pdf" multiple onchange="handleFileSelect(event)">
                             </div>
 
-                            <!-- Lista de Arquivos -->
                             <div id="arquivos-lista" class="space-y-3">
                                 ${marcaData.arquivos && marcaData.arquivos.length > 0 ? 
                                     marcaData.arquivos.map((arquivo, index) => renderArquivoItem(arquivo, index)).join('') : 
@@ -1723,7 +1796,6 @@
                 </div>`;
         }
 
-        // Função auxiliar para renderizar item de arquivo
         function renderArquivoItem(arquivo, index) {
             return `
                 <div class="file-item" id="file-${index}">
@@ -1748,7 +1820,6 @@
             `;
         }
 
-        // Funções de Upload de Arquivos
         function handleFileDragOver(e) {
             e.preventDefault();
             e.currentTarget.classList.add('dragover');
@@ -1782,7 +1853,7 @@
                 return;
             }
 
-            const maxSize = 60 * 1024 * 1024; // 60MB
+            const maxSize = 60 * 1024 * 1024;
             const validFiles = files.filter(f => {
                 if (f.size > maxSize) {
                     alert(`Arquivo "${f.name}" excede o limite de 60MB.`);
@@ -1797,19 +1868,20 @@
 
             if (validFiles.length === 0) return;
 
-            showLoading(true);
-
             for (const file of validFiles) {
                 try {
-                    // Criar referência única no Storage
                     const timestamp = Date.now();
                     const fileName = `${timestamp}_${file.name}`;
                     const storageRef = storage.ref(`marcas/${currentUser.id}/arquivos/${fileName}`);
                     
-                    // Upload com monitoramento de progresso
-                    const uploadTask = storageRef.put(file);
+                    const metadata = {
+                        contentType: 'application/pdf',
+                        customMetadata: {
+                            'originalName': file.name,
+                            'uploadedAt': new Date().toISOString()
+                        }
+                    };
                     
-                    // Criar elemento de progresso temporário
                     const progressId = `progress-${timestamp}`;
                     const tempHtml = `
                         <div class="file-item" id="${progressId}">
@@ -1831,37 +1903,59 @@
                     
                     lista.insertAdjacentHTML('afterbegin', tempHtml);
                     
-                    // Monitorar progresso
+                    const uploadTask = storageRef.put(file, metadata);
+                    
                     uploadTask.on('state_changed', 
                         (snapshot) => {
                             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            document.getElementById(`progress-bar-${timestamp}`).style.width = progress + '%';
+                            const progressBar = document.getElementById(`progress-bar-${timestamp}`);
+                            if (progressBar) progressBar.style.width = progress + '%';
                         },
                         (error) => {
                             console.error('Erro no upload:', error);
-                            alert(`Erro ao enviar ${file.name}: ${error.message}`);
-                            document.getElementById(progressId).remove();
+                            let errorMsg = 'Erro ao enviar arquivo';
+                            if (error.code === 'storage/retry-limit-exceeded') {
+                                errorMsg = 'Tempo limite excedido. O arquivo pode ser muito grande ou a conexão está lenta. Tente novamente ou use um arquivo menor.';
+                            } else if (error.code === 'storage/unauthorized') {
+                                errorMsg = 'Sem permissão para fazer upload. Verifique se você está logado.';
+                            } else if (error.code === 'storage/canceled') {
+                                errorMsg = 'Upload cancelado.';
+                            } else if (error.code === 'storage/quota-exceeded') {
+                                errorMsg = 'Limite de armazenamento excedido.';
+                            }
+                            alert(`${errorMsg}\n\nArquivo: ${file.name}`);
+                            const progressEl = document.getElementById(progressId);
+                            if (progressEl) progressEl.remove();
+                            
+                            if (lista.children.length === 0) {
+                                lista.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 py-4" id="no-files-msg">Nenhum arquivo enviado ainda</p>';
+                            }
                         },
                         async () => {
-                            // Upload completo
-                            const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-                            
-                            // Adicionar aos dados
-                            const arquivoData = {
-                                nome: file.name,
-                                url: downloadURL,
-                                tamanho: file.size,
-                                dataUpload: new Date().toISOString(),
-                                path: `marcas/${currentUser.id}/arquivos/${fileName}`
-                            };
-                            
-                            marcaData.arquivos.push(arquivoData);
-                            await saveUserData();
-                            
-                            // Remover progresso e adicionar item final
-                            document.getElementById(progressId).remove();
-                            const index = marcaData.arquivos.length - 1;
-                            lista.insertAdjacentHTML('afterbegin', renderArquivoItem(arquivoData, index));
+                            try {
+                                const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                                
+                                const arquivoData = {
+                                    nome: file.name,
+                                    url: downloadURL,
+                                    tamanho: file.size,
+                                    dataUpload: new Date().toISOString(),
+                                    path: `marcas/${currentUser.id}/arquivos/${fileName}`
+                                };
+                                
+                                marcaData.arquivos.push(arquivoData);
+                                await saveUserData();
+                                
+                                const progressEl = document.getElementById(progressId);
+                                if (progressEl) progressEl.remove();
+                                const index = marcaData.arquivos.length - 1;
+                                lista.insertAdjacentHTML('afterbegin', renderArquivoItem(arquivoData, index));
+                            } catch (error) {
+                                console.error('Erro ao obter URL:', error);
+                                alert(`Erro ao finalizar upload de ${file.name}`);
+                                const progressEl = document.getElementById(progressId);
+                                if (progressEl) progressEl.remove();
+                            }
                         }
                     );
                     
@@ -1870,26 +1964,20 @@
                     alert(`Erro ao processar ${file.name}: ${error.message}`);
                 }
             }
-            
-            showLoading(false);
         }
 
         async function removerArquivo(index) {
             if (!confirm('Deseja remover este arquivo?')) return;
             
-            showLoading(true);
             try {
                 const arquivo = marcaData.arquivos[index];
                 if (arquivo && arquivo.path) {
-                    // Deletar do Storage
                     await storage.ref(arquivo.path).delete();
                 }
                 
-                // Remover do array
                 marcaData.arquivos.splice(index, 1);
                 await saveUserData();
                 
-                // Re-renderizar lista
                 const lista = document.getElementById('arquivos-lista');
                 if (marcaData.arquivos.length === 0) {
                     lista.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 py-4" id="no-files-msg">Nenhum arquivo enviado ainda</p>';
@@ -1901,7 +1989,6 @@
                 console.error('Erro ao remover:', error);
                 alert('Erro ao remover arquivo: ' + error.message);
             }
-            showLoading(false);
         }
 
         function formatFileSize(bytes) {
@@ -1912,11 +1999,10 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        // ==================== NOVA FUNÇÃO: RENDER CONFIGURAÇÕES ====================
+
         function renderConfiguracoes(container) {
             container.innerHTML = `
                 <div class="max-w-4xl mx-auto space-y-8">
-                    <!-- Aparência -->
                     <div class="card rounded-2xl p-6 shadow-sm border">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                             <i class="fas fa-palette text-indigo-600"></i>Aparência
@@ -1930,7 +2016,6 @@
                         </div>
                     </div>
 
-                    <!-- Perfil -->
                     <div class="card rounded-2xl p-6 shadow-sm border">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                             <i class="fas fa-user text-indigo-600"></i>Perfil
@@ -1948,13 +2033,11 @@
                         <button onclick="updateProfile()" class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">Salvar Alterações</button>
                     </div>
 
-                    <!-- Configurações de Conteúdo Editáveis -->
                     <div class="card rounded-2xl p-6 shadow-sm border">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                             <i class="fas fa-list text-indigo-600"></i>Configurações de Conteúdo
                         </h3>
                         
-                        <!-- Canais -->
                         <div class="mb-8">
                             <div class="flex items-center justify-between mb-3">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Canais</label>
@@ -1968,7 +2051,6 @@
                             <p class="text-xs text-gray-500 mt-2">Estes canais aparecerão nas opções ao criar conteúdo</p>
                         </div>
 
-                        <!-- Tipos -->
                         <div class="mb-8">
                             <div class="flex items-center justify-between mb-3">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipos de Conteúdo</label>
@@ -1981,7 +2063,6 @@
                             </div>
                         </div>
 
-                        <!-- Quadros -->
                         <div class="mb-8">
                             <div class="flex items-center justify-between mb-3">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quadros / Temas</label>
@@ -1994,7 +2075,6 @@
                             </div>
                         </div>
 
-                        <!-- Objetivos -->
                         <div class="mb-6">
                             <div class="flex items-center justify-between mb-3">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Objetivos</label>
@@ -2012,7 +2092,6 @@
                         </button>
                     </div>
 
-                    <!-- Dados -->
                     <div class="card rounded-2xl p-6 shadow-sm border">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                             <i class="fas fa-database text-indigo-600"></i>Dados
@@ -2051,7 +2130,6 @@
                 </div>`;
         }
 
-        // Funções auxiliares para lista editável
         function renderEditableList(tipo, items) {
             if (!items || items.length === 0) return '<p class="text-sm text-gray-400 italic">Nenhum item cadastrado</p>';
             
@@ -2084,9 +2162,7 @@
             if (valor) {
                 if (!userSettings[tipo]) userSettings[tipo] = [];
                 userSettings[tipo].push(valor);
-                // Re-renderizar
                 document.getElementById(`editable-${tipo}`).innerHTML = renderEditableList(tipo, userSettings[tipo]);
-                // Salvar automaticamente
                 saveUserSettings();
             } else {
                 input.parentElement.remove();
@@ -2110,7 +2186,6 @@
             }
         }
 
-        // ==================== FUNÇÕES AUXILIARES ====================
         function toggleSection(sectionId) {
             const section = document.getElementById(`section-${sectionId}`);
             const icon = document.getElementById(`icon-${sectionId}`);
@@ -2269,18 +2344,176 @@
             const mesAtual = hoje.toISOString().slice(0, 7);
             const conteudosMes = conteudos.filter(c => c.mes === mesAtual);
             const publicados = conteudosMes.filter(c => c.status === 'Publicado');
+            const emProducao = conteudosMes.filter(c => ['Roteiro', 'Gravando', 'Editando'].includes(c.status));
+            const agendados = conteudosMes.filter(c => c.status === 'Agendado');
+            const ideias = conteudosMes.filter(c => c.status === 'Ideia');
             
             const porCanal = {};
             const porFunil = { Topo: 0, Meio: 0, Fundo: 0 };
+            const porTipo = {};
+            const porObjetivo = {};
             const porResponsavel = {};
             
             conteudosMes.forEach(c => {
                 porCanal[c.canal] = (porCanal[c.canal] || 0) + 1;
-                porFunil[c.funil]++;
+                porFunil[c.funil] = (porFunil[c.funil] || 0) + 1;
+                porTipo[c.tipo] = (porTipo[c.tipo] || 0) + 1;
+                porObjetivo[c.objetivo] = (porObjetivo[c.objetivo] || 0) + 1;
                 porResponsavel[c.responsavel] = (porResponsavel[c.responsavel] || 0) + 1;
             });
 
-            const reportText = `# RELATÓRIO ESTRATÉGICO - CONTENTFLOW\nGerado em: ${hoje.toLocaleDateString('pt-BR')}\n\n## RESUMO DA MARCA\n[Conteúdo do relatório...]`;
+            const execucao = conteudosMes.length > 0 ? Math.round((publicados.length / conteudosMes.length) * 100) : 0;
+
+            const reportText = `═══════════════════════════════════════════════════════════════════════════════
+                        RELATÓRIO ESTRATÉGICO - CONTENTFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+Gerado em: ${hoje.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+Período: ${formatMonth(mesAtual)}
+
+═══════════════════════════════════════════════════════════════════════════════
+                            RESUMO EXECUTIVO
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 INDICADORES PRINCIPAIS:
+
+• Total de Conteúdos Planejados: ${conteudosMes.length}
+• Conteúdos Publicados: ${publicados.length}
+• Taxa de Execução: ${execucao}%
+• Em Produção: ${emProducao.length}
+• Agendados: ${agendados.length}
+• Ideias Pendentes: ${ideias.length}
+
+═══════════════════════════════════════════════════════════════════════════════
+                        DISTRIBUIÇÃO POR CANAL
+═══════════════════════════════════════════════════════════════════════════════
+
+${Object.entries(porCanal).map(([canal, qtd]) => `• ${canal}: ${qtd} conteúdo(s)`).join('\n') || 'Nenhum dado disponível'}
+
+═══════════════════════════════════════════════════════════════════════════════
+                        DISTRIBUIÇÃO POR FUNIL
+═══════════════════════════════════════════════════════════════════════════════
+
+• Topo do Funil (Atração): ${porFunil.Topo} conteúdo(s) - ${conteudosMes.length > 0 ? Math.round((porFunil.Topo / conteudosMes.length) * 100) : 0}%
+• Meio do Funil (Consideração): ${porFunil.Meio} conteúdo(s) - ${conteudosMes.length > 0 ? Math.round((porFunil.Meio / conteudosMes.length) * 100) : 0}%
+• Fundo do Funil (Conversão): ${porFunil.Fundo} conteúdo(s) - ${conteudosMes.length > 0 ? Math.round((porFunil.Fundo / conteudosMes.length) * 100) : 0}%
+
+═══════════════════════════════════════════════════════════════════════════════
+                        DISTRIBUIÇÃO POR TIPO
+═══════════════════════════════════════════════════════════════════════════════
+
+${Object.entries(porTipo).map(([tipo, qtd]) => `• ${tipo}: ${qtd}`).join('\n') || 'Nenhum dado disponível'}
+
+═══════════════════════════════════════════════════════════════════════════════
+                        DISTRIBUIÇÃO POR OBJETIVO
+═══════════════════════════════════════════════════════════════════════════════
+
+${Object.entries(porObjetivo).map(([obj, qtd]) => `• ${obj}: ${qtd}`).join('\n') || 'Nenhum dado disponível'}
+
+═══════════════════════════════════════════════════════════════════════════════
+                        DISTRIBUIÇÃO POR RESPONSÁVEL
+═══════════════════════════════════════════════════════════════════════════════
+
+${Object.entries(porResponsavel).map(([resp, qtd]) => `• ${resp || 'Não atribuído'}: ${qtd} conteúdo(s)`).join('\n') || 'Nenhum dado disponível'}
+
+═══════════════════════════════════════════════════════════════════════════════
+                    CONTEÚDOS PUBLICADOS (${publicados.length})
+═══════════════════════════════════════════════════════════════════════════════
+
+${publicados.length > 0 ? publicados.map((c, i) => `${i + 1}. ${c.titulo}
+   Canal: ${c.canal} | Tipo: ${c.tipo} | Funil: ${c.funil} | Responsável: ${c.responsavel}
+   Data: ${formatDate(c.dataPrevista)}
+`).join('\n') : 'Nenhum conteúdo publicado neste mês.'}
+
+═══════════════════════════════════════════════════════════════════════════════
+                    CONTEÚDOS EM PRODUÇÃO (${emProducao.length})
+═══════════════════════════════════════════════════════════════════════════════
+
+${emProducao.length > 0 ? emProducao.map((c, i) => `${i + 1}. ${c.titulo} - ${c.status}
+   Canal: ${c.canal} | Responsável: ${c.responsavel} | Previsão: ${formatDate(c.dataPrevista)}
+`).join('\n') : 'Nenhum conteúdo em produção.'}
+
+═══════════════════════════════════════════════════════════════════════════════
+                    CONTEÚDOS AGENDADOS (${agendados.length})
+═══════════════════════════════════════════════════════════════════════════════
+
+${agendados.length > 0 ? agendados.map((c, i) => `${i + 1}. ${c.titulo}
+   Canal: ${c.canal} | Data: ${formatDate(c.dataPrevista)}
+`).join('\n') : 'Nenhum conteúdo agendado.'}
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ESTRATÉGIA DE MARCA
+═══════════════════════════════════════════════════════════════════════════════
+
+📌 PROPÓSITO:
+${marcaData.fundamentos?.proposito || 'Não definido'}
+
+📌 MISSÃO:
+${marcaData.fundamentos?.missao || 'Não definida'}
+
+📌 VISÃO:
+${marcaData.fundamentos?.visao || 'Não definida'}
+
+📌 VALORES:
+${marcaData.fundamentos?.valores || 'Não definidos'}
+
+📌 POSICIONAMENTO:
+${marcaData.fundamentos?.posicionamento || 'Não definido'}
+
+📌 DIFERENCIAL:
+${marcaData.fundamentos?.diferencial || 'Não definido'}
+
+═══════════════════════════════════════════════════════════════════════════════
+                        PÚBLICO-ALVO
+═══════════════════════════════════════════════════════════════════════════════
+
+👥 PÚBLICO-ALVO:
+${marcaData.publico?.publicoAlvo || 'Não definido'}
+
+👤 PERSONA PRINCIPAL:
+${marcaData.publico?.persona || 'Não definida'}
+
+😰 DORES:
+${marcaData.publico?.dores || 'Não definidas'}
+
+✨ DESEJOS:
+${marcaData.publico?.desejos || 'Não definidos'}
+
+🗣️ LINGUAGEM:
+${marcaData.publico?.linguagem || 'Não definida'}
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ANÁLISE E RECOMENDAÇÕES
+═══════════════════════════════════════════════════════════════════════════════
+
+📈 PERFORMANCE:
+• Taxa de execução atual: ${execucao}%
+• Meta sugerida: 80% ou mais
+${execucao < 50 ? '⚠️ ATENÇÃO: Taxa de execução abaixo do esperado. Recomenda-se revisar o planejamento.' : execucao < 80 ? '💡 DICA: Boa performance, mas há espaço para melhoria.' : '✅ EXCELENTE: Performance acima da meta!'}
+
+🎯 DISTRIBUIÇÃO DO FUNIL:
+${porFunil.Topo < porFunil.Fundo ? '⚠️ Pouco conteúdo no topo do funil. Aumentar conteúdos de atração.' : ''}
+${porFunil.Fundo < 3 ? '💡 Considere criar mais conteúdos para o fundo do funil (conversão).' : ''}
+
+📱 CANAIS:
+${Object.entries(porCanal).length > 0 ? `Foco principal: ${Object.entries(porCanal).sort((a, b) => b[1] - a[1])[0][0]}` : 'Defina seus canais prioritários'}
+
+═══════════════════════════════════════════════════════════════════════════════
+                        PROXIMOS PASSOS SUGERIDOS
+═══════════════════════════════════════════════════════════════════════════════
+
+${ideias.length > 0 ? '1. Priorizar aprovação das ideias pendentes' : '1. Brainstorm de novas ideias para o próximo mês'}
+${emProducao.length > 0 ? '2. Acompanhar produção dos conteúdos em andamento' : '2. Iniciar produção dos próximos conteúdos'}
+${agendados.length > 0 ? '3. Monitorar performance dos conteúdos agendados' : '3. Agendar conteúdos para publicação'}
+4. Revisar métricas de conteúdos publicados
+5. Ajustar estratégia conforme resultados
+
+═══════════════════════════════════════════════════════════════════════════════
+                        FIM DO RELATÓRIO
+═══════════════════════════════════════════════════════════════════════════════
+
+Relatório gerado automaticamente pelo ContentFlow
+Para mais informações, acesse a plataforma.`;
 
             const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
@@ -2338,13 +2571,13 @@
         }
         function formatMonth(mesStr) { 
             const [ano, mes] = mesStr.split('-'); 
-            return new Date(ano, mes - 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }); 
+            const nomeMes = new Date(ano, mes - 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+            return nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
         }
         function formatDate(dateStr) { 
             return new Date(dateStr).toLocaleDateString('pt-BR'); 
         }
 
-        // ==================== MODAL & EVENT HANDLERS ====================
         function openModal(id = null) {
             const modal = document.getElementById('content-modal');
             modal.classList.remove('hidden');
@@ -2442,14 +2675,6 @@
             openModal(id); 
         }
         
-        function createNewMonth() {
-            const mes = prompt('Digite o mês (YYYY-MM):', new Date().toISOString().slice(0, 7));
-            if (mes && /^\d{4}-\d{2}$/.test(mes)) { 
-                openModal(); 
-                document.getElementById('mes').value = mes; 
-            }
-        }
-        
         function handleSearch(e) {
             if (e.key === 'Enter') {
                 const term = e.target.value.toLowerCase();
@@ -2490,20 +2715,6 @@
             document.getElementById('sidebar').classList.toggle('-translate-x-full'); 
         }
         
-        function viewMonth(mes) {
-            const conteudosMes = conteudos.filter(c => c.mes === mes);
-            document.getElementById('month-detail').classList.remove('hidden');
-            document.getElementById('month-detail-title').textContent = `Conteúdos de ${formatMonth(mes)}`;
-            document.getElementById('month-detail-content').innerHTML = conteudosMes.length === 0 ? 
-                '<p class="text-center text-gray-500 dark:text-gray-400 py-8">Nenhum conteúdo neste mês</p>' : 
-                `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">${conteudosMes.map(c => renderContentCard(c)).join('')}</div>`;
-            document.getElementById('month-detail').scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        function closeMonthDetail() { 
-            document.getElementById('month-detail').classList.add('hidden'); 
-        }
-        
         function changeCalendarMonth(delta) { 
             currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta); 
             renderCalendario(document.getElementById('content-container')); 
@@ -2521,7 +2732,6 @@
             renderCalendario(document.getElementById('content-container'));
         }
 
-        // ==================== CONFIGURAÇÕES ====================
         function toggleThemeSwitch(element) {
             element.classList.toggle('active');
             const newTheme = toggleTheme();
@@ -2544,7 +2754,6 @@
         }
         
         async function saveContentOptions() {
-            // Já salvo automaticamente em cada alteração, mas mantido para compatibilidade
             await saveUserSettings();
             alert('Configurações salvas com sucesso!');
         }
