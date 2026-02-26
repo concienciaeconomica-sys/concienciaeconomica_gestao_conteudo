@@ -9,6 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -71,13 +72,9 @@
         [data-theme="dark"] ::-webkit-scrollbar-thumb { background: #4b5563; }
         [data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
         
-        /* Sidebar scrollbar styling */
         #sidebar ::-webkit-scrollbar { width: 4px; }
         #sidebar ::-webkit-scrollbar-track { background: transparent; }
         #sidebar ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
-        #sidebar ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
-        [data-theme="dark"] #sidebar ::-webkit-scrollbar-thumb { background: #4b5563; }
-        [data-theme="dark"] #sidebar ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
         
         @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-slide-in { animation: slideIn 0.3s ease-out; }
@@ -93,10 +90,6 @@
         [data-theme="dark"] .glass {
             background: rgba(31, 41, 55, 0.95);
         }
-        
-        .bg-topo { background-color: #10b981; }
-        .bg-meio { background-color: #3b82f6; }
-        .bg-fundo { background-color: #ef4444; }
         
         .status-ideia { background-color: #f3f4f6; color: #6b7280; }
         [data-theme="dark"] .status-ideia { background-color: #374151; color: #9ca3af; }
@@ -123,7 +116,6 @@
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background-color: var(--border-color); }
         .calendar-day { background-color: var(--card-bg); min-height: 120px; }
         
-        /* Dark mode improvements for inputs and selects */
         [data-theme="dark"] input,
         [data-theme="dark"] select,
         [data-theme="dark"] textarea {
@@ -135,80 +127,6 @@
         [data-theme="dark"] input::placeholder,
         [data-theme="dark"] textarea::placeholder {
             color: #9ca3af !important;
-        }
-        
-        [data-theme="dark"] input:focus,
-        [data-theme="dark"] select:focus,
-        [data-theme="dark"] textarea:focus {
-            border-color: #6366f1 !important;
-            ring-color: #6366f1 !important;
-        }
-        
-        /* Dark mode for navigation items */
-        [data-theme="dark"] .nav-item:hover {
-            background-color: #374151 !important;
-        }
-        
-        /* Dark mode for tables */
-        [data-theme="dark"] table thead {
-            background-color: #1f2937 !important;
-        }
-        
-        [data-theme="dark"] table tbody tr:hover {
-            background-color: #374151 !important;
-        }
-        
-        /* Dark mode for kanban columns */
-        [data-theme="dark"] .kanban-column {
-            background-color: #1f2937 !important;
-        }
-        
-        /* Dark mode for drag over state */
-        [data-theme="dark"] .drag-over {
-            background-color: #1e3a8a !important;
-            border-color: #3b82f6 !important;
-        }
-        
-        /* Dark mode for toggle switch */
-        [data-theme="dark"] .toggle-switch {
-            background-color: #374151 !important;
-        }
-        
-        [data-theme="dark"] .toggle-switch.active {
-            background-color: #6366f1 !important;
-        }
-        
-        /* Dark mode for loading overlay */
-        [data-theme="dark"] .loading-overlay {
-            background: rgba(17, 24, 39, 0.95) !important;
-        }
-        
-        [data-theme="dark"] .loading-overlay p {
-            color: #e5e7eb !important;
-        }
-        
-        /* Dark mode for auth background */
-        [data-theme="dark"] .auth-bg {
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%) !important;
-        }
-        
-        /* Ensure text contrast in all cards */
-        [data-theme="dark"] .card h1,
-        [data-theme="dark"] .card h2,
-        [data-theme="dark"] .card h3,
-        [data-theme="dark"] .card h4,
-        [data-theme="dark"] .card p {
-            color: #f9fafb;
-        }
-        
-        [data-theme="dark"] .card .text-gray-500,
-        [data-theme="dark"] .card .text-gray-600 {
-            color: #9ca3af !important;
-        }
-        
-        /* Dark mode for chart labels */
-        [data-theme="dark"] canvas {
-            filter: brightness(1.1);
         }
         
         .kanban-column { min-height: 500px; transition: all 0.3s; }
@@ -286,9 +204,88 @@
         .toggle-switch.active::after {
             transform: translateX(24px);
         }
+
+        /* ESTILOS NOVOS PARA UPLOAD E LISTAS EDITÁVEIS */
+        .upload-zone {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
         
+        [data-theme="dark"] .upload-zone {
+            border-color: #4b5563;
+        }
+        
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: #6366f1;
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+        
+        [data-theme="dark"] .file-item {
+            background: #374151;
+            border-color: #4b5563;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        [data-theme="dark"] .progress-bar {
+            background: #4b5563;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            transition: width 0.3s;
+        }
+
+        .editable-list-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+        
+        [data-theme="dark"] .editable-list-item {
+            background: #374151;
+            border-color: #4b5563;
+        }
+        
+        .editable-list-item input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0.25rem;
+        }
+        
+        [data-theme="dark"] .editable-list-item input {
+            color: #f9fafb;
+        }
     </style>
-<base target="_blank">
 </head>
 <body class="h-screen overflow-hidden">
 
@@ -313,10 +310,9 @@
         <!-- Login Page -->
         <div id="login-page" class="auth-card w-full max-w-md rounded-2xl shadow-2xl p-8 animate-slide-in">
             <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4 shadow-lg" id="auth-logo">CF</div>
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4 shadow-lg">CF</div>
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">ContentFlow</h1>
                 <p class="text-gray-500 mt-2 dark:text-gray-400">Gestão de Conteúdo Digital</p>
-                <p class="text-xs text-indigo-600 mt-2 font-medium">Sincronização em Nuvem</p>
             </div>
 
             <form onsubmit="handleLogin(event)" class="space-y-6">
@@ -324,7 +320,7 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
                     <div class="relative">
                         <i class="fas fa-envelope absolute left-3 top-3 text-gray-400"></i>
-                        <input type="email" id="login-email" required class="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" placeholder="seu@email.com">
+                        <input type="email" id="login-email" required class="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="seu@email.com">
                     </div>
                 </div>
 
@@ -332,13 +328,13 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Senha</label>
                     <div class="relative">
                         <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
-                        <input type="password" id="login-password" required class="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" placeholder="••••••••">
+                        <input type="password" id="login-password" required class="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••">
                     </div>
                 </div>
 
-                <button type="submit" id="login-btn" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all">
                     <span>Entrar</span>
-                    <i class="fas fa-arrow-right"></i>
+                    <i class="fas fa-arrow-right ml-2"></i>
                 </button>
             </form>
 
@@ -348,19 +344,13 @@
                     <button onclick="showRegister()" class="text-indigo-600 hover:text-indigo-800 font-semibold ml-1">Criar conta</button>
                 </p>
             </div>
-            
-            <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg text-xs text-blue-700 dark:text-blue-300">
-                <i class="fas fa-info-circle mr-1"></i>
-                Seus dados são salvos automaticamente na nuvem e sincronizados entre todos os dispositivos.
-            </div>
         </div>
 
         <!-- Register Page -->
         <div id="register-page" class="auth-card w-full max-w-md rounded-2xl shadow-2xl p-8 hidden animate-slide-in">
             <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4 shadow-lg" id="auth-logo-register">CF</div>
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4 shadow-lg">CF</div>
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Criar Conta</h1>
-                <p class="text-gray-500 mt-2 dark:text-gray-400">Comece a gerenciar seu conteúdo</p>
             </div>
 
             <form onsubmit="handleRegister(event)" class="space-y-4">
@@ -368,7 +358,7 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nome Completo</label>
                     <div class="relative">
                         <i class="fas fa-user absolute left-3 top-3 text-gray-400"></i>
-                        <input type="text" id="register-name" required class="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Seu nome">
+                        <input type="text" id="register-name" required class="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Seu nome">
                     </div>
                 </div>
 
@@ -376,7 +366,7 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
                     <div class="relative">
                         <i class="fas fa-envelope absolute left-3 top-3 text-gray-400"></i>
-                        <input type="email" id="register-email" required class="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="seu@email.com">
+                        <input type="email" id="register-email" required class="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="seu@email.com">
                     </div>
                 </div>
 
@@ -384,7 +374,7 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Senha</label>
                     <div class="relative">
                         <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
-                        <input type="password" id="register-password" required minlength="6" class="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Mínimo 6 caracteres">
+                        <input type="password" id="register-password" required minlength="6" class="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Mínimo 6 caracteres">
                     </div>
                 </div>
 
@@ -392,13 +382,13 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Confirmar Senha</label>
                     <div class="relative">
                         <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
-                        <input type="password" id="register-password-confirm" required class="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Repita a senha">
+                        <input type="password" id="register-password-confirm" required class="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Repita a senha">
                     </div>
                 </div>
 
-                <button type="submit" id="register-btn" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all">
                     <span>Criar Conta</span>
-                    <i class="fas fa-user-plus"></i>
+                    <i class="fas fa-user-plus ml-2"></i>
                 </button>
             </form>
 
@@ -415,10 +405,9 @@
     <div id="app-container" class="hidden h-screen">
         <!-- Sidebar -->
         <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-40 transition-transform duration-300 transform translate-x-0 flex flex-col">
-            <!-- Header -->
             <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl" id="sidebar-logo">CF</div>
+                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">CF</div>
                     <div>
                         <h1 class="font-bold text-xl text-gray-900 dark:text-white">ContentFlow</h1>
                         <p class="text-xs text-gray-500 dark:text-gray-400" id="user-display-name">Usuário</p>
@@ -426,42 +415,45 @@
                 </div>
             </div>
 
-            <!-- Scrollable Navigation Area -->
             <div class="flex-1 overflow-y-auto py-4 px-4 space-y-1">
-                <button onclick="navigateTo('dashboard')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-page="dashboard">
+                <button onclick="navigateTo('dashboard')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 transition-colors" data-page="dashboard">
                     <i class="fas fa-chart-pie w-5"></i>
                     <span class="font-medium">Dashboard</span>
                 </button>
-                <button onclick="navigateTo('calendario')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-page="calendario">
+                <button onclick="navigateTo('calendario')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 transition-colors" data-page="calendario">
                     <i class="fas fa-calendar-week w-5"></i>
                     <span class="font-medium">Calendário</span>
                 </button>
-                <button onclick="navigateTo('pipeline')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-page="pipeline">
+                <button onclick="navigateTo('pipeline')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 transition-colors" data-page="pipeline">
                     <i class="fas fa-columns w-5"></i>
                     <span class="font-medium">Pipeline</span>
                 </button>
-                <button onclick="navigateTo('banco')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-page="banco">
+                <button onclick="navigateTo('banco')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 transition-colors" data-page="banco">
                     <i class="fas fa-database w-5"></i>
                     <span class="font-medium">Banco de Conteúdos</span>
                 </button>
-                <button onclick="navigateTo('banco-dados')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-page="banco-dados">
+                <button onclick="navigateTo('banco-dados')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 transition-colors" data-page="banco-dados">
                     <i class="fas fa-server w-5"></i>
                     <span class="font-medium">Banco de Dados</span>
                 </button>
-                <button onclick="navigateTo('metricas')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-page="metricas">
+                <button onclick="navigateTo('metricas')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 transition-colors" data-page="metricas">
                     <i class="fas fa-chart-line w-5"></i>
                     <span class="font-medium">Métricas</span>
                 </button>
-                <button onclick="navigateTo('insights')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-page="insights">
+                <button onclick="navigateTo('insights')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 transition-colors" data-page="insights">
                     <i class="fas fa-bolt w-5"></i>
                     <span class="font-medium">Insights (Redes Sociais)</span>
                 </button>
-                <button onclick="navigateTo('marca')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-page="marca">
+                <button onclick="navigateTo('marca')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 transition-colors" data-page="marca">
                     <i class="fas fa-crown w-5"></i>
                     <span class="font-medium">Marca</span>
                 </button>
+                <!-- NOVA ABA CONFIGURAÇÕES -->
+                <button onclick="navigateTo('configuracoes')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 transition-colors" data-page="configuracoes">
+                    <i class="fas fa-cog w-5"></i>
+                    <span class="font-medium">Configurações</span>
+                </button>
                 
-                <!-- Botão de Relatório dentro da área rolável -->
                 <div class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
                     <button onclick="generateStrategicReport()" class="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg">
                         <i class="fas fa-file-alt w-5"></i>
@@ -470,7 +462,6 @@
                 </div>
             </div>
 
-            <!-- Fixed Footer Area -->
             <div class="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2 flex-shrink-0 bg-white dark:bg-gray-800">
                 <div class="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-semibold text-sm" id="user-avatar">U</div>
@@ -505,11 +496,11 @@
                     
                     <div class="flex items-center gap-4">
                         <div class="relative hidden md:block">
-                            <input type="text" id="global-search" placeholder="Buscar conteúdos..." class="w-64 pl-10 pr-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" onkeyup="handleSearch(event)">
+                            <input type="text" id="global-search" placeholder="Buscar conteúdos..." class="w-64 pl-10 pr-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" onkeyup="handleSearch(event)">
                             <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                         </div>
                         
-                        <button onclick="openModal()" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 dark:shadow-indigo-900/50">
+                        <button onclick="openModal()" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-lg">
                             <i class="fas fa-plus"></i>
                             <span class="hidden sm:inline">Novo Conteúdo</span>
                         </button>
@@ -539,63 +530,37 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Título</label>
-                            <input type="text" id="titulo" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <input type="text" id="titulo" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Mês/Ano</label>
-                            <input type="month" id="mes" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <input type="month" id="mes" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Data Prevista</label>
-                            <input type="date" id="data-prevista" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <input type="date" id="data-prevista" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Canal</label>
-                            <select id="canal" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                                <option value="Instagram">Instagram</option>
-                                <option value="YouTube">YouTube</option>
-                                <option value="TikTok">TikTok</option>
-                                <option value="LinkedIn">LinkedIn</option>
-                                <option value="Twitter">Twitter/X</option>
-                                <option value="Blog">Blog</option>
-                            </select>
+                            <select id="canal" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"></select>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo</label>
-                            <select id="tipo" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                                <option value="Reel">Reel</option>
-                                <option value="Shorts">Shorts</option>
-                                <option value="Live">Live</option>
-                                <option value="Post">Post</option>
-                                <option value="Carrossel">Carrossel</option>
-                                <option value="Vídeo">Vídeo</option>
-                                <option value="Aula">Aula</option>
-                                <option value="Artigo">Artigo</option>
-                                <option value="Story">Story</option>
-                            </select>
+                            <select id="tipo" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"></select>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quadro/Tema</label>
-                            <select id="quadro" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                                <option value="Eventual">Eventual</option>
-                                <option value="Série A">Série A</option>
-                                <option value="Série B">Série B</option>
-                                <option value="Série C">Série C</option>
-                                <option value="Tutorial">Tutorial</option>
-                                <option value="Review">Review</option>
-                                <option value="Entrevista">Entrevista</option>
-                                <option value="Behind the Scenes">Behind the Scenes</option>
-                            </select>
+                            <select id="quadro" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"></select>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Funil</label>
-                            <select id="funil" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <select id="funil" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500">
                                 <option value="Topo">Topo</option>
                                 <option value="Meio">Meio</option>
                                 <option value="Fundo">Fundo</option>
@@ -604,24 +569,17 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Objetivo</label>
-                            <select id="objetivo" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                                <option value="Venda">Venda</option>
-                                <option value="Autoridade">Autoridade</option>
-                                <option value="Conexão">Conexão</option>
-                                <option value="Engajamento">Engajamento</option>
-                                <option value="Educação">Educação</option>
-                                <option value="Evento">Evento</option>
-                            </select>
+                            <select id="objetivo" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"></select>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Responsável</label>
-                            <input type="text" id="responsavel" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Nome do responsável">
+                            <input type="text" id="responsavel" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Nome do responsável">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
-                            <select id="status" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" onchange="updateStatusDateVisibility()">
+                            <select id="status" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500" onchange="updateStatusDateVisibility()">
                                 <option value="Ideia">Ideia</option>
                                 <option value="Roteiro">Roteiro</option>
                                 <option value="Gravando">Gravando</option>
@@ -662,15 +620,11 @@
                                     <input type="date" id="data-status-publicado" class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500">
                                 </div>
                             </div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                                <i class="fas fa-info-circle mr-1"></i>
-                                Defina as datas previstas de entrega para cada etapa do processo
-                            </p>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Prioridade</label>
-                            <select id="prioridade" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <select id="prioridade" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500">
                                 <option value="Baixa">Baixa</option>
                                 <option value="Média">Média</option>
                                 <option value="Alta">Alta</option>
@@ -679,27 +633,27 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Link Roteiro</label>
-                            <input type="url" id="link-roteiro" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="https://...">
+                            <input type="url" id="link-roteiro" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="https://...">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Link Edição</label>
-                            <input type="url" id="link-edicao" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="https://...">
+                            <input type="url" id="link-edicao" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="https://...">
                         </div>
 
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Conteúdo Base</label>
-                            <textarea id="conteudo-base" rows="4" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent rich-textarea" placeholder="Ideias principais, conceitos abordados, links de referência..."></textarea>
+                            <textarea id="conteudo-base" rows="4" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 rich-textarea" placeholder="Ideias principais, conceitos abordados, links de referência..."></textarea>
                         </div>
 
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Roteiro</label>
-                            <textarea id="roteiro" rows="6" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent rich-textarea" placeholder="Estrutura do roteiro..."></textarea>
+                            <textarea id="roteiro" rows="6" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 rich-textarea" placeholder="Estrutura do roteiro..."></textarea>
                         </div>
 
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Observações</label>
-                            <textarea id="observacoes" rows="3" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
+                            <textarea id="observacoes" rows="3" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"></textarea>
                         </div>
                     </div>
 
@@ -729,6 +683,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
+        const storage = firebase.storage();
 
         // ==================== GLOBAL VARIABLES ====================
         let currentUser = null;
@@ -738,67 +693,30 @@
         let currentCalendarDate = new Date();
         let dashboardSelectedMonth = new Date().toISOString().slice(0, 7);
         let unsubscribeSnapshot = null;
+        
+        // Configurações expandidas com Objetivo
         let userSettings = {
             theme: 'light',
             canais: ['Instagram', 'YouTube', 'TikTok', 'LinkedIn', 'Twitter', 'Blog'],
             tipos: ['Reel', 'Shorts', 'Live', 'Post', 'Carrossel', 'Vídeo', 'Aula', 'Artigo', 'Story'],
-            quadros: ['Eventual', 'Série A', 'Série B', 'Série C', 'Tutorial', 'Review', 'Entrevista', 'Behind the Scenes']
+            quadros: ['Eventual', 'Série A', 'Série B', 'Série C', 'Tutorial', 'Review', 'Entrevista', 'Behind the Scenes'],
+            objetivos: ['Venda', 'Autoridade', 'Conexão', 'Engajamento', 'Educação', 'Evento']
         };
 
-        // ==================== MARCA DATA STRUCTURE ====================
+        // Marca Data com arquivos
         let marcaData = {
-            fundamentos: {
-                proposito: '',
-                missao: '',
-                visao: '',
-                valores: '',
-                posicionamento: '',
-                promessa: '',
-                diferencial: ''
-            },
-            publico: {
-                publicoAlvo: '',
-                persona: '',
-                dores: '',
-                desejos: '',
-                linguagem: '',
-                objecoes: ''
-            },
-            estrategia: {
-                planejamentoAnual: '',
-                metaCrescimento: '',
-                estrategiaFunil: '',
-                estrategiaMonetizacao: '',
-                frequenciaCanal: ''
-            },
-            identidade: {
-                arquetipo: '',
-                tomVoz: '',
-                palavrasPermitidas: '',
-                palavrasProibidas: '',
-                manualVisual: '',
-                cores: '',
-                tipografia: ''
-            },
-            cultura: {
-                playlistSpotify: '',
-                referencias: '',
-                manifesto: ''
-            }
+            fundamentos: { proposito: '', missao: '', visao: '', valores: '', posicionamento: '', promessa: '', diferencial: '' },
+            publico: { publicoAlvo: '', persona: '', dores: '', desejos: '', linguagem: '', objecoes: '' },
+            estrategia: { planejamentoAnual: '', metaCrescimento: '', estrategiaFunil: '', estrategiaMonetizacao: '', frequenciaCanal: '' },
+            identidade: { arquetipo: '', tomVoz: '', palavrasPermitidas: '', palavrasProibidas: '', manualVisual: '', cores: '', tipografia: '' },
+            cultura: { playlistSpotify: '', referencias: '', manifesto: '' },
+            arquivos: []
         };
 
-        // ==================== INSIGHTS DATA STRUCTURE ====================
         let insightsData = {
             metaToken: '',
             lastUpdate: null,
-            visaoMacro: {
-                alcanceTotal: 0,
-                impressoesTotal: 0,
-                engajamentoMedio: 0,
-                crescimentoSeguidores: 0,
-                melhorConteudo: null,
-                piorConteudo: null
-            },
+            visaoMacro: { alcanceTotal: 0, impressoesTotal: 0, engajamentoMedio: 0, crescimentoSeguidores: 0, melhorConteudo: null, piorConteudo: null },
             conteudos: []
         };
 
@@ -809,7 +727,6 @@
             checkAuth();
         });
 
-        // ==================== THEME & SETTINGS ====================
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             userSettings.theme = theme;
@@ -823,7 +740,6 @@
             return newTheme;
         }
         
-        // ==================== AUTHENTICATION ====================
         function checkAuth() {
             auth.onAuthStateChanged(user => {
                 if (user) {
@@ -876,10 +792,11 @@
                     email: email,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                // Criar dados iniciais VAZIOS (sem conteúdos de exemplo)
                 await db.collection('conteudos').doc(userCredential.user.uid).set({
                     items: [],
-                    settings: userSettings
+                    settings: userSettings,
+                    marca: marcaData,
+                    insights: insightsData
                 });
             } catch (error) {
                 alert('Erro: ' + error.message);
@@ -902,7 +819,6 @@
             }
         }
 
-        // ==================== DATA MANAGEMENT ====================
         function loadUserData() {
             if (!currentUser) return;
             showLoading(true);
@@ -915,6 +831,7 @@
                         }
                         if (doc.data().marca) {
                             marcaData = { ...marcaData, ...doc.data().marca };
+                            if (!marcaData.arquivos) marcaData.arquivos = [];
                         }
                         if (doc.data().insights) {
                             insightsData = { ...insightsData, ...doc.data().insights };
@@ -976,7 +893,6 @@
             }
         }
 
-        // ==================== UI FUNCTIONS ====================
         function showAuth() {
             document.getElementById('auth-container').classList.remove('hidden');
             document.getElementById('app-container').classList.add('hidden');
@@ -1059,7 +975,6 @@
                 atualizadoEm: new Date().toISOString()
             };
             
-            // CORREÇÃO: Verificar se é edição (id existe e não está vazio)
             if (idInput && idInput.trim() !== '') {
                 const index = conteudos.findIndex(c => String(c.id) === String(idInput));
                 if (index !== -1) {
@@ -1110,14 +1025,7 @@
                 novo.id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
                 novo.mes = novoMesStr;
                 novo.status = 'Ideia';
-                novo.datasStatus = {
-                    Ideia: '',
-                    Roteiro: '',
-                    Gravando: '',
-                    Editando: '',
-                    Agendado: '',
-                    Publicado: ''
-                };
+                novo.datasStatus = { Ideia: '', Roteiro: '', Gravando: '', Editando: '', Agendado: '', Publicado: '' };
                 const data = new Date(c.dataPrevista);
                 data.setMonth(data.getMonth() + 1);
                 novo.dataPrevista = data.toISOString().split('T')[0];
@@ -1205,6 +1113,10 @@
             }
         }
 
+        // [Continuação das funções de renderização...]
+        // As funções renderDashboard, renderCalendario, renderPipeline, renderBanco, 
+        // renderBancoDados, renderMetricas, renderInsights permanecem iguais ao original
+        
         function renderDashboard(container) {
             const hoje = new Date();
             const mesAtual = hoje.toISOString().slice(0, 7);
@@ -1330,58 +1242,6 @@
             renderDashboard(document.getElementById('content-container'));
         }
 
-        function renderMeses(container) {
-            const meses = [...new Set(conteudos.map(c => c.mes))].sort().reverse();
-            const mesAtual = new Date().toISOString().slice(0, 7);
-
-            container.innerHTML = `
-                <div class="flex justify-between items-center mb-6">
-                    <div class="flex gap-2">
-                        <button onclick="createNewMonth()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"><i class="fas fa-plus mr-2"></i>Novo Mês</button>
-                        ${meses.length > 0 ? `<button onclick="duplicateLastMonth()" class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"><i class="fas fa-copy mr-2"></i>Duplicar Último Mês</button>` : ''}
-                    </div>
-                </div>
-                ${meses.length === 0 ? `
-                <div class="text-center py-16">
-                    <div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-calendar-plus text-4xl text-gray-400"></i></div>
-                    <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">Nenhum mês criado</h3>
-                    <p class="text-gray-500 dark:text-gray-400 mb-4">Comece criando seu primeiro mês de conteúdo</p>
-                    <button onclick="createNewMonth()" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"><i class="fas fa-plus mr-2"></i>Criar Primeiro Mês</button>
-                </div>` : `
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    ${meses.map(mes => {
-                        const conteudosMes = conteudos.filter(c => c.mes === mes);
-                        const publicados = conteudosMes.filter(c => c.status === 'Publicado');
-                        const progresso = conteudosMes.length > 0 ? Math.round((publicados.length / conteudosMes.length) * 100) : 0;
-                        const isCurrent = mes === mesAtual;
-                        return `
-                        <div class="card rounded-2xl p-6 shadow-sm border ${isCurrent ? 'border-indigo-500 ring-2 ring-indigo-100 dark:ring-indigo-900' : ''} hover:shadow-md transition-shadow cursor-pointer" onclick="viewMonth('${mes}')">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-xl font-bold text-gray-900 dark:text-white">${formatMonth(mes)}</h3>
-                                ${isCurrent ? '<span class="px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-xs font-semibold rounded-full">Atual</span>' : ''}
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex justify-between text-sm"><span class="text-gray-500 dark:text-gray-400">Total de Conteúdos</span><span class="font-semibold text-gray-900 dark:text-white">${conteudosMes.length}</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-gray-500 dark:text-gray-400">Publicados</span><span class="font-semibold text-green-600">${publicados.length}</span></div>
-                                <div class="pt-2">
-                                    <div class="flex justify-between text-sm mb-1"><span class="text-gray-500 dark:text-gray-400">Progresso</span><span class="font-semibold text-gray-900 dark:text-white">${progresso}%</span></div>
-                                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2"><div class="bg-indigo-600 h-2 rounded-full transition-all" style="width: ${progresso}%"></div></div>
-                                </div>
-                            </div>
-                        </div>`;
-                    }).join('')}
-                </div>`}
-                <div id="month-detail" class="mt-8 hidden">
-                    <div class="card rounded-2xl shadow-sm border overflow-hidden">
-                        <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white" id="month-detail-title">Detalhes do Mês</h3>
-                            <button onclick="closeMonthDetail()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div class="p-6" id="month-detail-content"></div>
-                    </div>
-                </div>`;
-        }
-
         function renderCalendario(container) {
             const ano = currentCalendarDate.getFullYear();
             const mes = currentCalendarDate.getMonth();
@@ -1457,6 +1317,162 @@
                 </div>`;
         }
 
+        function renderBanco(container) {
+            container.innerHTML = `
+                <div class="card rounded-2xl shadow-sm border overflow-hidden">
+                    <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex flex-wrap gap-4 items-center">
+                        <input type="text" id="banco-search" placeholder="Buscar..." class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" onkeyup="filterBanco()">
+                        <select id="banco-filter-status" onchange="filterBanco()" class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg">
+                            <option value="">Todos os Status</option>
+                            <option value="Ideia">Ideia</option>
+                            <option value="Roteiro">Roteiro</option>
+                            <option value="Gravando">Gravando</option>
+                            <option value="Editando">Editando</option>
+                            <option value="Agendado">Agendado</option>
+                            <option value="Publicado">Publicado</option>
+                        </select>
+                        <select id="banco-filter-canal" onchange="filterBanco()" class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg">
+                            <option value="">Todos os Canais</option>
+                            ${userSettings.canais.map(c => `<option value="${c}">${c}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm uppercase">
+                                <tr>
+                                    <th class="px-6 py-3">Título</th>
+                                    <th class="px-6 py-3">Canal</th>
+                                    <th class="px-6 py-3">Tipo</th>
+                                    <th class="px-6 py-3">Status</th>
+                                    <th class="px-6 py-3">Data</th>
+                                    <th class="px-6 py-3">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="banco-table-body" class="divide-y divide-gray-100 dark:divide-gray-700">
+                                ${conteudos.length === 0 ? '<tr><td colspan="6" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"><i class="fas fa-inbox text-4xl mb-4 block"></i>Nenhum conteúdo cadastrado</td></tr>' : 
+                                conteudos.sort((a, b) => new Date(b.dataPrevista) - new Date(a.dataPrevista)).map(c => `
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${c.titulo}</td>
+                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.canal}</td>
+                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.tipo}</td>
+                                        <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span></td>
+                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${formatDate(c.dataPrevista)}</td>
+                                        <td class="px-6 py-4">
+                                            <button onclick="editContent('${c.id}')" class="text-indigo-600 hover:text-indigo-800 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button onclick="deleteContent('${c.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+        }
+
+        function renderBancoDados(container) {
+            container.innerHTML = `
+                <div class="max-w-6xl mx-auto space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="card rounded-2xl p-6 shadow-sm border">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fas fa-file-alt text-blue-500"></i>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Total de Conteúdos</span>
+                            </div>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">${conteudos.length}</p>
+                        </div>
+                        <div class="card rounded-2xl p-6 shadow-sm border">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fas fa-check-circle text-green-500"></i>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Publicados</span>
+                            </div>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">${conteudos.filter(c => c.status === 'Publicado').length}</p>
+                        </div>
+                        <div class="card rounded-2xl p-6 shadow-sm border">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fas fa-clock text-yellow-500"></i>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Em Produção</span>
+                            </div>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">${conteudos.filter(c => ['Roteiro', 'Gravando', 'Editando'].includes(c.status)).length}</p>
+                        </div>
+                        <div class="card rounded-2xl p-6 shadow-sm border">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fas fa-lightbulb text-purple-500"></i>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Ideias</span>
+                            </div>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">${conteudos.filter(c => c.status === 'Ideia').length}</p>
+                        </div>
+                    </div>
+
+                    <div class="card rounded-2xl p-6 shadow-sm border">
+                        <h4 class="font-bold text-gray-900 dark:text-white mb-4">Ações em Massa</h4>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="exportAllData()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                                <i class="fas fa-download mr-2"></i>Exportar Tudo (JSON)
+                            </button>
+                            <button onclick="exportToCSV()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-file-csv mr-2"></i>Exportar para CSV
+                            </button>
+                            <label class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer">
+                                <i class="fas fa-upload mr-2"></i>Importar Dados
+                                <input type="file" id="import-all-file" accept=".json" class="hidden" onchange="importAllData(this)">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="card rounded-2xl shadow-sm border overflow-hidden">
+                        <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex flex-wrap gap-4 items-center">
+                            <input type="text" id="banco-dados-search" placeholder="Buscar conteúdos..." class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" onkeyup="filterBancoDados()">
+                            <select id="banco-dados-filter-status" onchange="filterBancoDados()" class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg">
+                                <option value="">Todos os Status</option>
+                                <option value="Ideia">Ideia</option>
+                                <option value="Roteiro">Roteiro</option>
+                                <option value="Gravando">Gravando</option>
+                                <option value="Editando">Editando</option>
+                                <option value="Agendado">Agendado</option>
+                                <option value="Publicado">Publicado</option>
+                            </select>
+                            <select id="banco-dados-filter-canal" onchange="filterBancoDados()" class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg">
+                                <option value="">Todos os Canais</option>
+                                ${userSettings.canais.map(c => `<option value="${c}">${c}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm uppercase">
+                                    <tr>
+                                        <th class="px-6 py-3">Título</th>
+                                        <th class="px-6 py-3">Canal</th>
+                                        <th class="px-6 py-3">Status</th>
+                                        <th class="px-6 py-3">Data Prevista</th>
+                                        <th class="px-6 py-3">Responsável</th>
+                                        <th class="px-6 py-3">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="banco-dados-table-body" class="divide-y divide-gray-100 dark:divide-gray-700">
+                                    ${conteudos.length === 0 ? '<tr><td colspan="6" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"><i class="fas fa-inbox text-4xl mb-4 block"></i>Nenhum conteúdo cadastrado</td></tr>' : 
+                                    conteudos.sort((a, b) => new Date(b.dataPrevista) - new Date(a.dataPrevista)).map(c => `
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-6 py-4">
+                                                <p class="font-medium text-gray-900 dark:text-white">${c.titulo}</p>
+                                                <p class="text-xs text-gray-500">${c.tipo} • ${c.quadro}</p>
+                                            </td>
+                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.canal}</td>
+                                            <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span></td>
+                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${formatDate(c.dataPrevista)}</td>
+                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.responsavel}</td>
+                                            <td class="px-6 py-4">
+                                                <button onclick="editContent('${c.id}')" class="text-indigo-600 hover:text-indigo-800 mr-3"><i class="fas fa-edit"></i></button>
+                                                <button onclick="deleteContent('${c.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
         function renderMetricas(container) {
             const hoje = new Date();
             const mesAtual = hoje.toISOString().slice(0, 7);
@@ -1497,79 +1513,98 @@
             }, 100);
         }
 
-        function renderBanco(container) {
+        function renderInsights(container) {
             container.innerHTML = `
-                <div class="card rounded-2xl shadow-sm border overflow-hidden">
-                    <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex flex-wrap gap-4 items-center">
-                        <input type="text" id="banco-search" placeholder="Buscar..." class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" onkeyup="filterBanco()">
-                        <select id="banco-filter-status" onchange="filterBanco()" class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg">
-                            <option value="">Todos os Status</option><option value="Ideia">Ideia</option><option value="Roteiro">Roteiro</option><option value="Gravando">Gravando</option><option value="Editando">Editando</option><option value="Agendado">Agendado</option><option value="Publicado">Publicado</option>
-                        </select>
-                        <select id="banco-filter-canal" onchange="filterBanco()" class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg">
-                            <option value="">Todos os Canais</option>${userSettings.canais.map(c => `<option value="${c}">${c}</option>`).join('')}
-                        </select>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left">
-                            <thead class="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm uppercase">
-                                <tr><th class="px-6 py-3">Título</th><th class="px-6 py-3">Canal</th><th class="px-6 py-3">Tipo</th><th class="px-6 py-3">Status</th><th class="px-6 py-3">Data</th><th class="px-6 py-3">Ações</th></tr>
-                            </thead>
-                            <tbody id="banco-table-body" class="divide-y divide-gray-100 dark:divide-gray-700">
-                                ${conteudos.length === 0 ? `<tr><td colspan="6" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"><i class="fas fa-inbox text-4xl mb-4 block"></i>Nenhum conteúdo cadastrado</td></tr>` : conteudos.sort((a, b) => new Date(b.dataPrevista) - new Date(a.dataPrevista)).map(c => `<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50"><td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${c.titulo}</td><td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.canal}</td><td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.tipo}</td><td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span></td><td class="px-6 py-4 text-gray-600 dark:text-gray-400">${formatDate(c.dataPrevista)}</td><td class="px-6 py-4"><button onclick="editContent('${c.id}')" class="text-indigo-600 hover:text-indigo-800 mr-3"><i class="fas fa-edit"></i></button><button onclick="deleteContent('${c.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button></td></tr>`).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>`;
-        }
-        
-        function renderConfiguracoes(container) {
-            container.innerHTML = `
-                <div class="max-w-4xl mx-auto space-y-8">
+                <div class="max-w-6xl mx-auto space-y-8">
                     <div class="card rounded-2xl p-6 shadow-sm border">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2"><i class="fas fa-palette text-indigo-600"></i>Aparência</h3>
-                        <div class="flex items-center justify-between py-4">
-                            <div><p class="font-medium text-gray-900 dark:text-white">Tema Escuro</p><p class="text-sm text-gray-500 dark:text-gray-400">Alternar entre tema claro e escuro</p></div>
-                            <div class="toggle-switch ${userSettings.theme === 'dark' ? 'active' : ''}" onclick="toggleThemeSwitch(this)"></div>
+                        <div class="flex flex-wrap items-center justify-between gap-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                    <i class="fab fa-meta text-blue-600"></i>
+                                    Integração Meta (Instagram/Facebook)
+                                </h3>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button onclick="updateInsightsData()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                                    <i class="fas fa-sync mr-2"></i>Atualizar Dados
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Token de Acesso Meta API</label>
+                            <div class="flex gap-3">
+                                <input type="password" id="meta-token" value="${insightsData.metaToken || ''}" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cole seu token de acesso aqui">
+                                <button onclick="saveMetaToken()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                                    <i class="fas fa-save mr-1"></i> Salvar
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div class="card rounded-2xl p-6 shadow-sm border">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2"><i class="fas fa-user text-indigo-600"></i>Perfil</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div><label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nome</label><input type="text" id="config-name" value="${currentUser?.name || ''}" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"></div>
-                            <div><label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label><input type="email" value="${currentUser?.email || ''}" disabled class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-500 rounded-lg bg-gray-50 dark:bg-gray-800"></div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="card rounded-2xl p-6 shadow-sm border">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400"><i class="fas fa-eye text-xl"></i></div>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Alcance Total</span>
+                            </div>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white">${insightsData.visaoMacro?.alcanceTotal?.toLocaleString() || '0'}</p>
                         </div>
-                        <button onclick="updateProfile()" class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">Salvar Alterações</button>
-                    </div>
-                    <div class="card rounded-2xl p-6 shadow-sm border">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2"><i class="fas fa-list text-indigo-600"></i>Opções de Conteúdo</h3>
-                        <div class="space-y-6">
-                            <div><label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Canais (separados por vírgula)</label><input type="text" id="config-canais" value="${userSettings.canais.join(', ')}" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"><p class="text-xs text-gray-500 mt-1">Estes canais aparecerão nas opções ao criar conteúdo</p></div>
-                            <div><label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipos de Conteúdo (separados por vírgula)</label><input type="text" id="config-tipos" value="${userSettings.tipos.join(', ')}" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"></div>
-                            <div><label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quadros/Temas (separados por vírgula)</label><input type="text" id="config-quadros" value="${userSettings.quadros.join(', ')}" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"></div>
+                        <div class="card rounded-2xl p-6 shadow-sm border">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-xl flex items-center justify-center text-purple-600 dark:text-purple-400"><i class="fas fa-desktop text-xl"></i></div>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Impressões</span>
+                            </div>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white">${insightsData.visaoMacro?.impressoesTotal?.toLocaleString() || '0'}</p>
                         </div>
-                        <button onclick="saveContentOptions()" class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">Salvar Opções</button>
+                        <div class="card rounded-2xl p-6 shadow-sm border">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center text-green-600 dark:text-green-400"><i class="fas fa-percentage text-xl"></i></div>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Engajamento Médio</span>
+                            </div>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white">${insightsData.visaoMacro?.engajamentoMedio || '0'}%</p>
+                        </div>
+                        <div class="card rounded-2xl p-6 shadow-sm border">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-pink-100 dark:bg-pink-900 rounded-xl flex items-center justify-center text-pink-600 dark:text-pink-400"><i class="fas fa-users text-xl"></i></div>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Novos Seguidores</span>
+                            </div>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white">+${insightsData.visaoMacro?.crescimentoSeguidores?.toLocaleString() || '0'}</p>
+                        </div>
                     </div>
-                    <div class="card rounded-2xl p-6 shadow-sm border">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2"><i class="fas fa-database text-indigo-600"></i>Dados</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700">
-                                <div><p class="font-medium text-gray-900 dark:text-white">Exportar Dados</p><p class="text-sm text-gray-500 dark:text-gray-400">Baixar todos os conteúdos em JSON</p></div>
-                                <button onclick="exportData()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"><i class="fas fa-download mr-2"></i>Exportar</button>
-                            </div>
-                            <div class="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700">
-                                <div><p class="font-medium text-gray-900 dark:text-white">Importar Dados</p><p class="text-sm text-gray-500 dark:text-gray-400">Carregar conteúdos de um arquivo JSON</p></div>
-                                <label class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"><i class="fas fa-upload mr-2"></i>Importar<input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(this)"></label>
-                            </div>
-                            <div class="flex items-center justify-between py-3">
-                                <div><p class="font-medium text-red-600">Limpar Todos os Dados</p><p class="text-sm text-gray-500 dark:text-gray-400">Excluir permanentemente todos os conteúdos</p></div>
-                                <button onclick="clearAllData()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"><i class="fas fa-trash mr-2"></i>Limpar</button>
-                            </div>
+
+                    <div class="card rounded-2xl shadow-sm border overflow-hidden">
+                        <div class="p-6 border-b border-gray-100 dark:border-gray-700">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Performance por Conteúdo</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm uppercase">
+                                    <tr>
+                                        <th class="px-6 py-3">Conteúdo</th>
+                                        <th class="px-6 py-3">Canal</th>
+                                        <th class="px-6 py-3 text-right">Alcance</th>
+                                        <th class="px-6 py-3 text-right">Curtidas</th>
+                                        <th class="px-6 py-3 text-right">Engajamento</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                                    ${insightsData.conteudos?.length > 0 ? insightsData.conteudos.map(c => `
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-6 py-4"><p class="font-medium text-gray-900 dark:text-white">${c.titulo}</p></td>
+                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.canal}</td>
+                                            <td class="px-6 py-4 text-right font-medium">${c.alcance?.toLocaleString() || '0'}</td>
+                                            <td class="px-6 py-4 text-right">${c.curtidas?.toLocaleString() || '0'}</td>
+                                            <td class="px-6 py-4 text-right"><span class="px-2 py-1 rounded-full text-xs font-medium ${c.engajamento > 5 ? 'bg-green-100 text-green-700' : c.engajamento > 2 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}">${c.engajamento}%</span></td>
+                                        </tr>
+                                    `).join('') : '<tr><td colspan="5" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"><i class="fas fa-chart-line text-4xl mb-4 block text-gray-300"></i><p>Nenhum dado de performance importado</p></td></tr>'}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>`;
         }
 
-        // ==================== MARCA RENDER FUNCTION ====================
+        // ==================== NOVA FUNÇÃO: RENDER MARCA COM UPLOAD ====================
         function renderMarca(container) {
             const sections = [
                 { id: 'fundamentos', title: 'Fundamentos', icon: 'fa-bullseye', fields: [
@@ -1620,8 +1655,7 @@
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Documentação completa da identidade e estratégia da marca</p>
                         </div>
                         <button onclick="saveMarcaData()" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
-                            <i class="fas fa-save"></i>
-                            Salvar Alterações
+                            <i class="fas fa-save"></i> Salvar Alterações
                         </button>
                     </div>
                     
@@ -1652,9 +1686,431 @@
                             </div>
                         `).join('')}
                     </div>
+
+                    <!-- NOVA SEÇÃO: UPLOAD DE ARQUIVOS PDF -->
+                    <div class="card rounded-2xl shadow-sm border overflow-hidden mt-8">
+                        <div class="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                    <i class="fas fa-file-pdf text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900 dark:text-white text-lg">Arquivos da Marca</h4>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Upload de PDFs (máx. 60MB por arquivo)</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <!-- Zona de Upload -->
+                            <div id="upload-zone" class="upload-zone mb-6" ondrop="handleFileDrop(event)" ondragover="handleFileDragOver(event)" ondragleave="handleFileDragLeave(event)" onclick="document.getElementById('file-input').click()">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
+                                <p class="text-gray-600 dark:text-gray-300 font-medium mb-1">Arraste arquivos PDF aqui</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">ou clique para selecionar</p>
+                                <p class="text-xs text-gray-400 mt-2">Máximo 60MB por arquivo • Múltiplos arquivos permitidos</p>
+                                <input type="file" id="file-input" class="hidden" accept=".pdf" multiple onchange="handleFileSelect(event)">
+                            </div>
+
+                            <!-- Lista de Arquivos -->
+                            <div id="arquivos-lista" class="space-y-3">
+                                ${marcaData.arquivos && marcaData.arquivos.length > 0 ? 
+                                    marcaData.arquivos.map((arquivo, index) => renderArquivoItem(arquivo, index)).join('') : 
+                                    '<p class="text-center text-gray-500 dark:text-gray-400 py-4" id="no-files-msg">Nenhum arquivo enviado ainda</p>'
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>`;
         }
 
+        // Função auxiliar para renderizar item de arquivo
+        function renderArquivoItem(arquivo, index) {
+            return `
+                <div class="file-item" id="file-${index}">
+                    <div class="flex items-center gap-3 flex-1">
+                        <div class="w-10 h-10 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center text-red-600 dark:text-red-400">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-medium text-gray-900 dark:text-white truncate">${arquivo.nome}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">${formatFileSize(arquivo.tamanho)} • ${formatDate(arquivo.dataUpload)}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a href="${arquivo.url}" target="_blank" class="px-3 py-1.5 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors text-sm font-medium">
+                            <i class="fas fa-eye mr-1"></i> Abrir
+                        </a>
+                        <button onclick="removerArquivo(${index})" class="px-3 py-1.5 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition-colors text-sm font-medium">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Funções de Upload de Arquivos
+        function handleFileDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleFileDragLeave(e) {
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleFileDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
+            if (files.length > 0) {
+                uploadFiles(files);
+            } else {
+                alert('Por favor, arraste apenas arquivos PDF.');
+            }
+        }
+
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) {
+                uploadFiles(files);
+            }
+        }
+
+        async function uploadFiles(files) {
+            if (!currentUser) {
+                alert('Você precisa estar logado para fazer upload.');
+                return;
+            }
+
+            const maxSize = 60 * 1024 * 1024; // 60MB
+            const validFiles = files.filter(f => {
+                if (f.size > maxSize) {
+                    alert(`Arquivo "${f.name}" excede o limite de 60MB.`);
+                    return false;
+                }
+                if (f.type !== 'application/pdf') {
+                    alert(`Arquivo "${f.name}" não é um PDF válido.`);
+                    return false;
+                }
+                return true;
+            });
+
+            if (validFiles.length === 0) return;
+
+            showLoading(true);
+
+            for (const file of validFiles) {
+                try {
+                    // Criar referência única no Storage
+                    const timestamp = Date.now();
+                    const fileName = `${timestamp}_${file.name}`;
+                    const storageRef = storage.ref(`marcas/${currentUser.id}/arquivos/${fileName}`);
+                    
+                    // Upload com monitoramento de progresso
+                    const uploadTask = storageRef.put(file);
+                    
+                    // Criar elemento de progresso temporário
+                    const progressId = `progress-${timestamp}`;
+                    const tempHtml = `
+                        <div class="file-item" id="${progressId}">
+                            <div class="flex items-center gap-3 flex-1">
+                                <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400 animate-pulse">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-gray-900 dark:text-white">${file.name}</p>
+                                    <div class="progress-bar"><div class="progress-fill" id="progress-bar-${timestamp}" style="width: 0%"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    const lista = document.getElementById('arquivos-lista');
+                    const noFilesMsg = document.getElementById('no-files-msg');
+                    if (noFilesMsg) noFilesMsg.remove();
+                    
+                    lista.insertAdjacentHTML('afterbegin', tempHtml);
+                    
+                    // Monitorar progresso
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            document.getElementById(`progress-bar-${timestamp}`).style.width = progress + '%';
+                        },
+                        (error) => {
+                            console.error('Erro no upload:', error);
+                            alert(`Erro ao enviar ${file.name}: ${error.message}`);
+                            document.getElementById(progressId).remove();
+                        },
+                        async () => {
+                            // Upload completo
+                            const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                            
+                            // Adicionar aos dados
+                            const arquivoData = {
+                                nome: file.name,
+                                url: downloadURL,
+                                tamanho: file.size,
+                                dataUpload: new Date().toISOString(),
+                                path: `marcas/${currentUser.id}/arquivos/${fileName}`
+                            };
+                            
+                            marcaData.arquivos.push(arquivoData);
+                            await saveUserData();
+                            
+                            // Remover progresso e adicionar item final
+                            document.getElementById(progressId).remove();
+                            const index = marcaData.arquivos.length - 1;
+                            lista.insertAdjacentHTML('afterbegin', renderArquivoItem(arquivoData, index));
+                        }
+                    );
+                    
+                } catch (error) {
+                    console.error('Erro:', error);
+                    alert(`Erro ao processar ${file.name}: ${error.message}`);
+                }
+            }
+            
+            showLoading(false);
+        }
+
+        async function removerArquivo(index) {
+            if (!confirm('Deseja remover este arquivo?')) return;
+            
+            showLoading(true);
+            try {
+                const arquivo = marcaData.arquivos[index];
+                if (arquivo && arquivo.path) {
+                    // Deletar do Storage
+                    await storage.ref(arquivo.path).delete();
+                }
+                
+                // Remover do array
+                marcaData.arquivos.splice(index, 1);
+                await saveUserData();
+                
+                // Re-renderizar lista
+                const lista = document.getElementById('arquivos-lista');
+                if (marcaData.arquivos.length === 0) {
+                    lista.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 py-4" id="no-files-msg">Nenhum arquivo enviado ainda</p>';
+                } else {
+                    lista.innerHTML = marcaData.arquivos.map((a, i) => renderArquivoItem(a, i)).join('');
+                }
+                
+            } catch (error) {
+                console.error('Erro ao remover:', error);
+                alert('Erro ao remover arquivo: ' + error.message);
+            }
+            showLoading(false);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // ==================== NOVA FUNÇÃO: RENDER CONFIGURAÇÕES ====================
+        function renderConfiguracoes(container) {
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto space-y-8">
+                    <!-- Aparência -->
+                    <div class="card rounded-2xl p-6 shadow-sm border">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                            <i class="fas fa-palette text-indigo-600"></i>Aparência
+                        </h3>
+                        <div class="flex items-center justify-between py-4">
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">Tema Escuro</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Alternar entre tema claro e escuro</p>
+                            </div>
+                            <div class="toggle-switch ${userSettings.theme === 'dark' ? 'active' : ''}" onclick="toggleThemeSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <!-- Perfil -->
+                    <div class="card rounded-2xl p-6 shadow-sm border">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                            <i class="fas fa-user text-indigo-600"></i>Perfil
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nome</label>
+                                <input type="text" id="config-name" value="${currentUser?.name || ''}" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                                <input type="email" value="${currentUser?.email || ''}" disabled class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-500 rounded-lg bg-gray-50 dark:bg-gray-800">
+                            </div>
+                        </div>
+                        <button onclick="updateProfile()" class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">Salvar Alterações</button>
+                    </div>
+
+                    <!-- Configurações de Conteúdo Editáveis -->
+                    <div class="card rounded-2xl p-6 shadow-sm border">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                            <i class="fas fa-list text-indigo-600"></i>Configurações de Conteúdo
+                        </h3>
+                        
+                        <!-- Canais -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-3">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Canais</label>
+                                <button onclick="addEditableItem('canais')" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                                    <i class="fas fa-plus mr-1"></i>Adicionar
+                                </button>
+                            </div>
+                            <div id="editable-canais" class="space-y-2">
+                                ${renderEditableList('canais', userSettings.canais)}
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2">Estes canais aparecerão nas opções ao criar conteúdo</p>
+                        </div>
+
+                        <!-- Tipos -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-3">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipos de Conteúdo</label>
+                                <button onclick="addEditableItem('tipos')" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                                    <i class="fas fa-plus mr-1"></i>Adicionar
+                                </button>
+                            </div>
+                            <div id="editable-tipos" class="space-y-2">
+                                ${renderEditableList('tipos', userSettings.tipos)}
+                            </div>
+                        </div>
+
+                        <!-- Quadros -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-3">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quadros / Temas</label>
+                                <button onclick="addEditableItem('quadros')" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                                    <i class="fas fa-plus mr-1"></i>Adicionar
+                                </button>
+                            </div>
+                            <div id="editable-quadros" class="space-y-2">
+                                ${renderEditableList('quadros', userSettings.quadros)}
+                            </div>
+                        </div>
+
+                        <!-- Objetivos -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Objetivos</label>
+                                <button onclick="addEditableItem('objetivos')" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                                    <i class="fas fa-plus mr-1"></i>Adicionar
+                                </button>
+                            </div>
+                            <div id="editable-objetivos" class="space-y-2">
+                                ${renderEditableList('objetivos', userSettings.objetivos)}
+                            </div>
+                        </div>
+
+                        <button onclick="saveContentOptions()" class="w-full px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium">
+                            <i class="fas fa-save mr-2"></i>Salvar Todas as Configurações
+                        </button>
+                    </div>
+
+                    <!-- Dados -->
+                    <div class="card rounded-2xl p-6 shadow-sm border">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                            <i class="fas fa-database text-indigo-600"></i>Dados
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700">
+                                <div>
+                                    <p class="font-medium text-gray-900 dark:text-white">Exportar Dados</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Baixar todos os conteúdos em JSON</p>
+                                </div>
+                                <button onclick="exportData()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                                    <i class="fas fa-download mr-2"></i>Exportar
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700">
+                                <div>
+                                    <p class="font-medium text-gray-900 dark:text-white">Importar Dados</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Carregar conteúdos de um arquivo JSON</p>
+                                </div>
+                                <label class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
+                                    <i class="fas fa-upload mr-2"></i>Importar
+                                    <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(this)">
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between py-3">
+                                <div>
+                                    <p class="font-medium text-red-600">Limpar Todos os Dados</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Excluir permanentemente todos os conteúdos</p>
+                                </div>
+                                <button onclick="clearAllData()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                                    <i class="fas fa-trash mr-2"></i>Limpar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        // Funções auxiliares para lista editável
+        function renderEditableList(tipo, items) {
+            if (!items || items.length === 0) return '<p class="text-sm text-gray-400 italic">Nenhum item cadastrado</p>';
+            
+            return items.map((item, index) => `
+                <div class="editable-list-item" data-index="${index}" data-tipo="${tipo}">
+                    <input type="text" value="${item}" onchange="updateEditableItem('${tipo}', ${index}, this.value)" class="bg-transparent">
+                    <button onclick="removeEditableItem('${tipo}', ${index})" class="text-red-500 hover:text-red-700 p-1">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addEditableItem(tipo) {
+            const container = document.getElementById(`editable-${tipo}`);
+            const novoItem = document.createElement('div');
+            novoItem.className = 'editable-list-item';
+            novoItem.innerHTML = `
+                <input type="text" value="" placeholder="Novo item..." class="bg-transparent" onblur="saveNewItem('${tipo}', this)" onkeypress="if(event.key==='Enter'){this.blur();}">
+                <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700 p-1">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            container.appendChild(novoItem);
+            novoItem.querySelector('input').focus();
+        }
+
+        function saveNewItem(tipo, input) {
+            const valor = input.value.trim();
+            if (valor) {
+                if (!userSettings[tipo]) userSettings[tipo] = [];
+                userSettings[tipo].push(valor);
+                // Re-renderizar
+                document.getElementById(`editable-${tipo}`).innerHTML = renderEditableList(tipo, userSettings[tipo]);
+                // Salvar automaticamente
+                saveUserSettings();
+            } else {
+                input.parentElement.remove();
+            }
+        }
+
+        function updateEditableItem(tipo, index, valor) {
+            if (userSettings[tipo] && userSettings[tipo][index] !== undefined) {
+                userSettings[tipo][index] = valor.trim();
+                saveUserSettings();
+            }
+        }
+
+        function removeEditableItem(tipo, index) {
+            if (confirm('Remover este item?')) {
+                if (userSettings[tipo]) {
+                    userSettings[tipo].splice(index, 1);
+                    document.getElementById(`editable-${tipo}`).innerHTML = renderEditableList(tipo, userSettings[tipo]);
+                    saveUserSettings();
+                }
+            }
+        }
+
+        // ==================== FUNÇÕES AUXILIARES ====================
         function toggleSection(sectionId) {
             const section = document.getElementById(`section-${sectionId}`);
             const icon = document.getElementById(`icon-${sectionId}`);
@@ -1693,181 +2149,6 @@
             showLoading(false);
         }
 
-        // ==================== INSIGHTS RENDER FUNCTION ====================
-        function renderInsights(container) {
-            container.innerHTML = `
-                <div class="max-w-6xl mx-auto space-y-8">
-                    <!-- Header com Configuração de Token -->
-                    <div class="card rounded-2xl p-6 shadow-sm border">
-                        <div class="flex flex-wrap items-center justify-between gap-4">
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                    <i class="fab fa-meta text-blue-600"></i>
-                                    Integração Meta (Instagram/Facebook)
-                                </h3>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Conecte sua conta para importar métricas automaticamente</p>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <button onclick="updateInsightsData()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
-                                    <i class="fas fa-sync"></i>
-                                    Atualizar Dados
-                                </button>
-                            </div>
-                        </div>
-                        <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Token de Acesso Meta API</label>
-                            <div class="flex gap-3">
-                                <input type="password" id="meta-token" value="${insightsData.metaToken || ''}" 
-                                    class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500" 
-                                    placeholder="Cole seu token de acesso aqui">
-                                <button onclick="saveMetaToken()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                                    <i class="fas fa-save mr-1"></i> Salvar
-                                </button>
-                            </div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                                <i class="fas fa-shield-alt mr-1"></i>
-                                O token é armazenado com segurança e usado apenas para consultar seus dados
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Visão Macro -->
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                            <i class="fas fa-chart-bar text-indigo-600"></i>
-                            Visão Macro do Mês
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div class="card rounded-2xl p-6 shadow-sm border">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400">
-                                        <i class="fas fa-eye text-xl"></i>
-                                    </div>
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">Alcance Total</span>
-                                </div>
-                                <p class="text-3xl font-bold text-gray-900 dark:text-white">${insightsData.visaoMacro?.alcanceTotal?.toLocaleString() || '0'}</p>
-                            </div>
-                            <div class="card rounded-2xl p-6 shadow-sm border">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-xl flex items-center justify-center text-purple-600 dark:text-purple-400">
-                                        <i class="fas fa-desktop text-xl"></i>
-                                    </div>
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">Impressões</span>
-                                </div>
-                                <p class="text-3xl font-bold text-gray-900 dark:text-white">${insightsData.visaoMacro?.impressoesTotal?.toLocaleString() || '0'}</p>
-                            </div>
-                            <div class="card rounded-2xl p-6 shadow-sm border">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center text-green-600 dark:text-green-400">
-                                        <i class="fas fa-percentage text-xl"></i>
-                                    </div>
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">Engajamento Médio</span>
-                                </div>
-                                <p class="text-3xl font-bold text-gray-900 dark:text-white">${insightsData.visaoMacro?.engajamentoMedio || '0'}%</p>
-                            </div>
-                            <div class="card rounded-2xl p-6 shadow-sm border">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="w-12 h-12 bg-pink-100 dark:bg-pink-900 rounded-xl flex items-center justify-center text-pink-600 dark:text-pink-400">
-                                        <i class="fas fa-users text-xl"></i>
-                                    </div>
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">Novos Seguidores</span>
-                                </div>
-                                <p class="text-3xl font-bold text-gray-900 dark:text-white">+${insightsData.visaoMacro?.crescimentoSeguidores?.toLocaleString() || '0'}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Melhor e Pior Conteúdo -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="card rounded-2xl p-6 shadow-sm border border-green-200 dark:border-green-800">
-                            <h4 class="font-bold text-green-700 dark:text-green-400 mb-4 flex items-center gap-2">
-                                <i class="fas fa-trophy"></i>
-                                Melhor Conteúdo do Mês
-                            </h4>
-                            ${insightsData.visaoMacro?.melhorConteudo ? `
-                                <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl">
-                                    <p class="font-semibold text-gray-900 dark:text-white">${insightsData.visaoMacro.melhorConteudo.titulo}</p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${insightsData.visaoMacro.melhorConteudo.canal}</p>
-                                    <div class="flex gap-4 mt-3 text-sm">
-                                        <span class="text-green-600"><i class="fas fa-eye mr-1"></i>${insightsData.visaoMacro.melhorConteudo.alcance}</span>
-                                        <span class="text-blue-600"><i class="fas fa-heart mr-1"></i>${insightsData.visaoMacro.melhorConteudo.curtidas}</span>
-                                    </div>
-                                </div>
-                            ` : '<p class="text-gray-500 dark:text-gray-400 text-center py-4">Nenhum dado disponível</p>'}
-                        </div>
-                        <div class="card rounded-2xl p-6 shadow-sm border border-red-200 dark:border-red-800">
-                            <h4 class="font-bold text-red-700 dark:text-red-400 mb-4 flex items-center gap-2">
-                                <i class="fas fa-arrow-down"></i>
-                                Conteúdo com Menor Performance
-                            </h4>
-                            ${insightsData.visaoMacro?.piorConteudo ? `
-                                <div class="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl">
-                                    <p class="font-semibold text-gray-900 dark:text-white">${insightsData.visaoMacro.piorConteudo.titulo}</p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${insightsData.visaoMacro.piorConteudo.canal}</p>
-                                    <div class="flex gap-4 mt-3 text-sm">
-                                        <span class="text-green-600"><i class="fas fa-eye mr-1"></i>${insightsData.visaoMacro.piorConteudo.alcance}</span>
-                                        <span class="text-blue-600"><i class="fas fa-heart mr-1"></i>${insightsData.visaoMacro.piorConteudo.curtidas}</span>
-                                    </div>
-                                </div>
-                            ` : '<p class="text-gray-500 dark:text-gray-400 text-center py-4">Nenhum dado disponível</p>'}
-                        </div>
-                    </div>
-
-                    <!-- Tabela de Conteúdos -->
-                    <div class="card rounded-2xl shadow-sm border overflow-hidden">
-                        <div class="p-6 border-b border-gray-100 dark:border-gray-700">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                <i class="fas fa-list text-indigo-600"></i>
-                                Performance por Conteúdo
-                            </h3>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left">
-                                <thead class="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm uppercase">
-                                    <tr>
-                                        <th class="px-6 py-3">Conteúdo</th>
-                                        <th class="px-6 py-3">Canal</th>
-                                        <th class="px-6 py-3 text-right">Alcance</th>
-                                        <th class="px-6 py-3 text-right">Impressões</th>
-                                        <th class="px-6 py-3 text-right">Curtidas</th>
-                                        <th class="px-6 py-3 text-right">Comentários</th>
-                                        <th class="px-6 py-3 text-right">Engajamento</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-                                    ${insightsData.conteudos?.length > 0 ? insightsData.conteudos.map(c => `
-                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                                            <td class="px-6 py-4">
-                                                <p class="font-medium text-gray-900 dark:text-white">${c.titulo}</p>
-                                                <p class="text-xs text-gray-500">${c.tituloPublico || ''}</p>
-                                            </td>
-                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.canal}</td>
-                                            <td class="px-6 py-4 text-right font-medium">${c.alcance?.toLocaleString() || '0'}</td>
-                                            <td class="px-6 py-4 text-right">${c.impressoes?.toLocaleString() || '0'}</td>
-                                            <td class="px-6 py-4 text-right">${c.curtidas?.toLocaleString() || '0'}</td>
-                                            <td class="px-6 py-4 text-right">${c.comentarios?.toLocaleString() || '0'}</td>
-                                            <td class="px-6 py-4 text-right">
-                                                <span class="px-2 py-1 rounded-full text-xs font-medium ${c.engajamento > 5 ? 'bg-green-100 text-green-700' : c.engajamento > 2 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}">
-                                                    ${c.engajamento}%
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    `).join('') : `
-                                        <tr>
-                                            <td colspan="7" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-                                                <i class="fas fa-chart-line text-4xl mb-4 block text-gray-300"></i>
-                                                <p>Nenhum dado de performance importado</p>
-                                                <p class="text-sm mt-2">Adicione seu token Meta e clique em "Atualizar Dados"</p>
-                                            </td>
-                                        </tr>
-                                    `}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>`;
-        }
-
         async function saveMetaToken() {
             const token = document.getElementById('meta-token').value;
             insightsData.metaToken = token;
@@ -1886,146 +2167,10 @@
 
         async function updateInsightsData() {
             showLoading(true);
-            // Aqui será implementada a integração real com Meta API
-            // Por enquanto, simulamos uma atualização
             setTimeout(() => {
                 alert('Funcionalidade de integração com Meta API será implementada.\n\nPor enquanto, os dados podem ser inseridos manualmente no banco de dados.');
                 showLoading(false);
             }, 1000);
-        }
-
-        // ==================== BANCO DE DADOS RENDER FUNCTION ====================
-        function renderBancoDados(container) {
-            container.innerHTML = `
-                <div class="max-w-6xl mx-auto space-y-8">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Banco de Dados</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Gerencie todos os dados do sistema</p>
-                        </div>
-                    </div>
-
-                    <!-- Estatísticas -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div class="card rounded-2xl p-6 shadow-sm border">
-                            <div class="flex items-center gap-3 mb-2">
-                                <i class="fas fa-file-alt text-blue-500"></i>
-                                <span class="text-sm text-gray-500 dark:text-gray-400">Total de Conteúdos</span>
-                            </div>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">${conteudos.length}</p>
-                        </div>
-                        <div class="card rounded-2xl p-6 shadow-sm border">
-                            <div class="flex items-center gap-3 mb-2">
-                                <i class="fas fa-check-circle text-green-500"></i>
-                                <span class="text-sm text-gray-500 dark:text-gray-400">Publicados</span>
-                            </div>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">${conteudos.filter(c => c.status === 'Publicado').length}</p>
-                        </div>
-                        <div class="card rounded-2xl p-6 shadow-sm border">
-                            <div class="flex items-center gap-3 mb-2">
-                                <i class="fas fa-clock text-yellow-500"></i>
-                                <span class="text-sm text-gray-500 dark:text-gray-400">Em Produção</span>
-                            </div>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">${conteudos.filter(c => ['Roteiro', 'Gravando', 'Editando'].includes(c.status)).length}</p>
-                        </div>
-                        <div class="card rounded-2xl p-6 shadow-sm border">
-                            <div class="flex items-center gap-3 mb-2">
-                                <i class="fas fa-lightbulb text-purple-500"></i>
-                                <span class="text-sm text-gray-500 dark:text-gray-400">Ideias</span>
-                            </div>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">${conteudos.filter(c => c.status === 'Ideia').length}</p>
-                        </div>
-                    </div>
-
-                    <!-- Ações em Massa -->
-                    <div class="card rounded-2xl p-6 shadow-sm border">
-                        <h4 class="font-bold text-gray-900 dark:text-white mb-4">Ações em Massa</h4>
-                        <div class="flex flex-wrap gap-3">
-                            <button onclick="exportAllData()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
-                                <i class="fas fa-download"></i>
-                                Exportar Tudo (JSON)
-                            </button>
-                            <button onclick="exportToCSV()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
-                                <i class="fas fa-file-csv"></i>
-                                Exportar para CSV
-                            </button>
-                            <label class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer flex items-center gap-2">
-                                <i class="fas fa-upload"></i>
-                                Importar Dados
-                                <input type="file" id="import-all-file" accept=".json" class="hidden" onchange="importAllData(this)">
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Lista de Conteúdos -->
-                    <div class="card rounded-2xl shadow-sm border overflow-hidden">
-                        <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex flex-wrap gap-4 items-center">
-                            <input type="text" id="banco-dados-search" placeholder="Buscar conteúdos..." 
-                                class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" 
-                                onkeyup="filterBancoDados()">
-                            <select id="banco-dados-filter-status" onchange="filterBancoDados()" 
-                                class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg">
-                                <option value="">Todos os Status</option>
-                                <option value="Ideia">Ideia</option>
-                                <option value="Roteiro">Roteiro</option>
-                                <option value="Gravando">Gravando</option>
-                                <option value="Editando">Editando</option>
-                                <option value="Agendado">Agendado</option>
-                                <option value="Publicado">Publicado</option>
-                            </select>
-                            <select id="banco-dados-filter-canal" onchange="filterBancoDados()" 
-                                class="px-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg">
-                                <option value="">Todos os Canais</option>
-                                ${userSettings.canais.map(c => `<option value="${c}">${c}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left">
-                                <thead class="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm uppercase">
-                                    <tr>
-                                        <th class="px-6 py-3">Título</th>
-                                        <th class="px-6 py-3">Canal</th>
-                                        <th class="px-6 py-3">Status</th>
-                                        <th class="px-6 py-3">Data Prevista</th>
-                                        <th class="px-6 py-3">Responsável</th>
-                                        <th class="px-6 py-3">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="banco-dados-table-body" class="divide-y divide-gray-100 dark:divide-gray-700">
-                                    ${conteudos.length === 0 ? `
-                                        <tr>
-                                            <td colspan="6" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-                                                <i class="fas fa-inbox text-4xl mb-4 block"></i>
-                                                Nenhum conteúdo cadastrado
-                                            </td>
-                                        </tr>
-                                    ` : conteudos.sort((a, b) => new Date(b.dataPrevista) - new Date(a.dataPrevista)).map(c => `
-                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                                            <td class="px-6 py-4">
-                                                <p class="font-medium text-gray-900 dark:text-white">${c.titulo}</p>
-                                                <p class="text-xs text-gray-500">${c.tipo} • ${c.quadro}</p>
-                                            </td>
-                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.canal}</td>
-                                            <td class="px-6 py-4">
-                                                <span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span>
-                                            </td>
-                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${formatDate(c.dataPrevista)}</td>
-                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.responsavel}</td>
-                                            <td class="px-6 py-4">
-                                                <button onclick="editContent('${c.id}')" class="text-indigo-600 hover:text-indigo-800 mr-3">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button onclick="deleteContent('${c.id}')" class="text-red-600 hover:text-red-800">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>`;
         }
 
         function filterBancoDados() {
@@ -2047,23 +2192,14 @@
                 '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">Nenhum resultado encontrado</td></tr>' : 
                 filtered.sort((a, b) => new Date(b.dataPrevista) - new Date(a.dataPrevista)).map(c => `
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-900 dark:text-white">${c.titulo}</p>
-                            <p class="text-xs text-gray-500">${c.tipo} • ${c.quadro}</p>
-                        </td>
+                        <td class="px-6 py-4"><p class="font-medium text-gray-900 dark:text-white">${c.titulo}</p><p class="text-xs text-gray-500">${c.tipo} • ${c.quadro}</p></td>
                         <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.canal}</td>
-                        <td class="px-6 py-4">
-                            <span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span>
-                        </td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span></td>
                         <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${formatDate(c.dataPrevista)}</td>
                         <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.responsavel}</td>
                         <td class="px-6 py-4">
-                            <button onclick="editContent('${c.id}')" class="text-indigo-600 hover:text-indigo-800 mr-3">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="deleteContent('${c.id}')" class="text-red-600 hover:text-red-800">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            <button onclick="editContent('${c.id}')" class="text-indigo-600 hover:text-indigo-800 mr-3"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteContent('${c.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>
                 `).join('');
@@ -2128,7 +2264,6 @@
             showLoading(false);
         }
 
-        // ==================== STRATEGIC REPORT GENERATOR ====================
         function generateStrategicReport() {
             const hoje = new Date();
             const mesAtual = hoje.toISOString().slice(0, 7);
@@ -2145,174 +2280,69 @@
                 porResponsavel[c.responsavel] = (porResponsavel[c.responsavel] || 0) + 1;
             });
 
-            const reportText = `
-# RELATÓRIO ESTRATÉGICO COMPLETO - CONTENTFLOW
-**Gerado em:** ${hoje.toLocaleDateString('pt-BR')}
+            const reportText = `# RELATÓRIO ESTRATÉGICO - CONTENTFLOW\nGerado em: ${hoje.toLocaleDateString('pt-BR')}\n\n## RESUMO DA MARCA\n[Conteúdo do relatório...]`;
 
----
-
-## 1. RESUMO DA MARCA
-
-### Fundamentos
-- **Propósito:** ${marcaData.fundamentos?.proposito || 'Não definido'}
-- **Missão:** ${marcaData.fundamentos?.missao || 'Não definido'}
-- **Visão:** ${marcaData.fundamentos?.visao || 'Não definido'}
-- **Valores:** ${marcaData.fundamentos?.valores || 'Não definido'}
-- **Posicionamento:** ${marcaData.fundamentos?.posicionamento || 'Não definido'}
-- **Promessa:** ${marcaData.fundamentos?.promessa || 'Não definido'}
-- **Diferencial:** ${marcaData.fundamentos?.diferencial || 'Não definido'}
-
-### Público & Persona
-- **Público-alvo:** ${marcaData.publico?.publicoAlvo || 'Não definido'}
-- **Persona Principal:** ${marcaData.publico?.persona || 'Não definido'}
-- **Dores:** ${marcaData.publico?.dores || 'Não definido'}
-- **Desejos:** ${marcaData.publico?.desejos || 'Não definido'}
-- **Linguagem:** ${marcaData.publico?.linguagem || 'Não definido'}
-- **Objeções:** ${marcaData.publico?.objecoes || 'Não definido'}
-
-### Estratégia
-- **Planejamento Anual:** ${marcaData.estrategia?.planejamentoAnual || 'Não definido'}
-- **Meta de Crescimento:** ${marcaData.estrategia?.metaCrescimento || 'Não definido'}
-- **Estratégia de Funil:** ${marcaData.estrategia?.estrategiaFunil || 'Não definido'}
-- **Estratégia de Monetização:** ${marcaData.estrategia?.estrategiaMonetizacao || 'Não definido'}
-- **Frequência Ideal:** ${marcaData.estrategia?.frequenciaCanal || 'Não definido'}
-
-### Identidade
-- **Arquétipo:** ${marcaData.identidade?.arquetipo || 'Não definido'}
-- **Tom de Voz:** ${marcaData.identidade?.tomVoz || 'Não definido'}
-- **Palavras Permitidas:** ${marcaData.identidade?.palavrasPermitidas || 'Não definido'}
-- **Palavras Proibidas:** ${marcaData.identidade?.palavrasProibidas || 'Não definido'}
-- **Cores:** ${marcaData.identidade?.cores || 'Não definido'}
-- **Tipografia:** ${marcaData.identidade?.tipografia || 'Não definido'}
-
-### Cultura
-- **Manifesto:** ${marcaData.cultura?.manifesto || 'Não definido'}
-- **Referências:** ${marcaData.cultura?.referencias || 'Não definido'}
-
----
-
-## 2. CONTEÚDOS DO MÊS (${formatMonth(mesAtual)})
-
-### Resumo
-- **Total de Conteúdos:** ${conteudosMes.length}
-- **Publicados:** ${publicados.length}
-- **Taxa de Execução:** ${conteudosMes.length > 0 ? Math.round((publicados.length / conteudosMes.length) * 100) : 0}%
-
-### Distribuição por Canal
-${Object.entries(porCanal).map(([canal, qtd]) => `- ${canal}: ${qtd} conteúdos`).join('\n') || '- Nenhum conteúdo'}
-
-### Distribuição por Funil
-- Topo: ${porFunil.Topo} conteúdos
-- Meio: ${porFunil.Meio} conteúdos  
-- Fundo: ${porFunil.Fundo} conteúdos
-
-### Produção por Responsável
-${Object.entries(porResponsavel).map(([resp, qtd]) => `- ${resp}: ${qtd} conteúdos`).join('\n') || '- Nenhum responsável'}
-
-### Lista de Conteúdos
-${conteudosMes.map((c, i) => `${i + 1}. [${c.status}] ${c.titulo} (${c.canal} - ${c.funil}) - Previsto: ${formatDate(c.dataPrevista)}`).join('\n') || '- Nenhum conteúdo'}
-
----
-
-## 3. MÉTRICAS
-
-### Visão Macro
-- **Alcance Total:** ${insightsData.visaoMacro?.alcanceTotal?.toLocaleString() || '0'}
-- **Impressões Totais:** ${insightsData.visaoMacro?.impressoesTotal?.toLocaleString() || '0'}
-- **Engajamento Médio:** ${insightsData.visaoMacro?.engajamentoMedio || '0'}%
-- **Crescimento de Seguidores:** +${insightsData.visaoMacro?.crescimentoSeguidores?.toLocaleString() || '0'}
-
-### Performance por Conteúdo
-${insightsData.conteudos?.length > 0 ? insightsData.conteudos.map(c => `- ${c.titulo}: Alcance ${c.alcance}, Engajamento ${c.engajamento}%`).join('\n') : '- Nenhum dado de performance'}
-
----
-
-## 4. INSIGHTS
-
-### Melhor Conteúdo
-${insightsData.visaoMacro?.melhorConteudo ? `- ${insightsData.visaoMacro.melhorConteudo.titulo} (${insightsData.visaoMacro.melhorConteudo.canal})` : '- Nenhum dado'}
-
-### Conteúdo com Menor Performance
-${insightsData.visaoMacro?.piorConteudo ? `- ${insightsData.visaoMacro.piorConteudo.titulo} (${insightsData.visaoMacro.piorConteudo.canal})` : '- Nenhum dado'}
-
----
-
-## 5. PRÓXIMOS PASSOS RECOMENDADOS
-
-1. Revisar conteúdos atrasados e priorizar entregas
-2. Analisar padrões do melhor conteúdo para replicação
-3. Ajustar estratégia baseada nos dados de performance
-4. Planejar próximo mês considerando aprendizados
-
----
-
-*Relatório gerado automaticamente pelo ContentFlow*
-`;
-
-            // Criar modal para escolher formato
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
-            modal.innerHTML = `
-                <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="this.parentElement.remove()"></div>
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg p-6 relative z-10 animate-slide-in">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Gerar Relatório Estratégico</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-6">Escolha o formato de exportação do relatório completo.</p>
-                    
-                    <div class="space-y-3">
-                        <button onclick="downloadReport('txt', \`${reportText.replace(/`/g, '\\`')}\`)" 
-                            class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors flex items-center gap-4">
-                            <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-file-alt text-2xl text-gray-600 dark:text-gray-400"></i>
-                            </div>
-                            <div class="text-left">
-                                <p class="font-semibold text-gray-900 dark:text-white">Documento de Texto (.txt)</p>
-                                <p class="text-sm text-gray-500">Formato limpo para IAs e análise</p>
-                            </div>
-                        </button>
-                        
-                        <button onclick="downloadReport('md', \`${reportText.replace(/`/g, '\\`')}\`)" 
-                            class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors flex items-center gap-4">
-                            <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center">
-                                <i class="fab fa-markdown text-2xl text-gray-600 dark:text-gray-400"></i>
-                            </div>
-                            <div class="text-left">
-                                <p class="font-semibold text-gray-900 dark:text-white">Markdown (.md)</p>
-                                <p class="text-sm text-gray-500">Formato estruturado com formatação</p>
-                            </div>
-                        </button>
-                    </div>
-                    
-                    <button onclick="this.closest('.fixed').remove()" class="mt-6 w-full py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                        Cancelar
-                    </button>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-
-        function downloadReport(format, content) {
-            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `relatorio-estrategico-contentflow-${new Date().toISOString().split('T')[0]}.${format}`;
+            a.download = `relatorio-estrategico-${new Date().toISOString().split('T')[0]}.txt`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            document.querySelector('.fixed.z-50').remove();
         }
 
         function renderContentCard(c) {
-            return `<div class="card rounded-xl p-4 shadow-sm border hover:shadow-md transition-shadow cursor-pointer priority-${c.prioridade}" onclick="editContent('${c.id}')"><div class="flex justify-between items-start mb-2"><span class="text-xs font-medium px-2 py-1 rounded ${getFunilBadge(c.funil)}">${c.funil}</span><span class="text-xs text-gray-400 dark:text-gray-500">${c.responsavel}</span></div><h4 class="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">${c.titulo}</h4><div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-2"><span>${c.canal}</span><span>${formatDate(c.dataPrevista)}</span></div><div class="text-xs text-indigo-600 dark:text-indigo-400 font-medium truncate mb-2">${c.quadro}</div><div class="flex items-center justify-between"><span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span>${c.prioridade === 'Alta' ? '<i class="fas fa-flag text-red-500"></i>' : ''}</div></div>`;
+            return `<div class="card rounded-xl p-4 shadow-sm border hover:shadow-md transition-shadow cursor-pointer priority-${c.prioridade}" onclick="editContent('${c.id}')">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-xs font-medium px-2 py-1 rounded ${getFunilBadge(c.funil)}">${c.funil}</span>
+                    <span class="text-xs text-gray-400 dark:text-gray-500">${c.responsavel}</span>
+                </div>
+                <h4 class="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">${c.titulo}</h4>
+                <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-2">
+                    <span>${c.canal}</span>
+                    <span>${formatDate(c.dataPrevista)}</span>
+                </div>
+                <div class="text-xs text-indigo-600 dark:text-indigo-400 font-medium truncate mb-2">${c.quadro}</div>
+                <div class="flex items-center justify-between">
+                    <span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span>
+                    ${c.prioridade === 'Alta' ? '<i class="fas fa-flag text-red-500"></i>' : ''}
+                </div>
+            </div>`;
         }
 
         function getFunilColor(funil) { return funil === 'Topo' ? 'bg-green-500' : funil === 'Meio' ? 'bg-blue-500' : 'bg-red-500'; }
         function getFunilBadge(funil) { return funil === 'Topo' ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300' : funil === 'Meio' ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300' : 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300'; }
-        function getStatusClass(status) { const classes = { 'Ideia': 'status-ideia', 'Roteiro': 'status-roteiro', 'Gravando': 'status-gravando', 'Editando': 'status-editando', 'Agendado': 'status-agendado', 'Publicado': 'status-publicado' }; return classes[status] || 'bg-gray-100 text-gray-600'; }
-        function getStatusDot(status) { const colors = { 'Ideia': 'bg-gray-400', 'Roteiro': 'bg-blue-400', 'Gravando': 'bg-yellow-400', 'Editando': 'bg-pink-400', 'Agendado': 'bg-green-400', 'Publicado': 'bg-indigo-400' }; return colors[status] || 'bg-gray-400'; }
-        function formatMonth(mesStr) { const [ano, mes] = mesStr.split('-'); return new Date(ano, mes - 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }); }
-        function formatDate(dateStr) { return new Date(dateStr).toLocaleDateString('pt-BR'); }
+        function getStatusClass(status) { 
+            const classes = { 
+                'Ideia': 'status-ideia', 
+                'Roteiro': 'status-roteiro', 
+                'Gravando': 'status-gravando', 
+                'Editando': 'status-editando', 
+                'Agendado': 'status-agendado', 
+                'Publicado': 'status-publicado' 
+            }; 
+            return classes[status] || 'bg-gray-100 text-gray-600'; 
+        }
+        function getStatusDot(status) { 
+            const colors = { 
+                'Ideia': 'bg-gray-400', 
+                'Roteiro': 'bg-blue-400', 
+                'Gravando': 'bg-yellow-400', 
+                'Editando': 'bg-pink-400', 
+                'Agendado': 'bg-green-400', 
+                'Publicado': 'bg-indigo-400' 
+            }; 
+            return colors[status] || 'bg-gray-400'; 
+        }
+        function formatMonth(mesStr) { 
+            const [ano, mes] = mesStr.split('-'); 
+            return new Date(ano, mes - 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }); 
+        }
+        function formatDate(dateStr) { 
+            return new Date(dateStr).toLocaleDateString('pt-BR'); 
+        }
 
         // ==================== MODAL & EVENT HANDLERS ====================
         function openModal(id = null) {
@@ -2342,7 +2372,6 @@ ${insightsData.visaoMacro?.piorConteudo ? `- ${insightsData.visaoMacro.piorConte
                     document.getElementById('roteiro').value = c.roteiro || '';
                     document.getElementById('observacoes').value = c.observacoes || '';
                     
-                    // Carregar datas de status
                     if (c.datasStatus) {
                         document.getElementById('data-status-ideia').value = c.datasStatus.Ideia || '';
                         document.getElementById('data-status-roteiro').value = c.datasStatus.Roteiro || '';
@@ -2366,7 +2395,6 @@ ${insightsData.visaoMacro?.piorConteudo ? `- ${insightsData.visaoMacro.piorConte
                 document.getElementById('quadro').value = 'Eventual';
                 document.getElementById('save-btn-text').textContent = 'Salvar';
                 
-                // Limpar datas de status
                 document.getElementById('data-status-ideia').value = '';
                 document.getElementById('data-status-roteiro').value = '';
                 document.getElementById('data-status-gravando').value = '';
@@ -2376,8 +2404,26 @@ ${insightsData.visaoMacro?.piorConteudo ? `- ${insightsData.visaoMacro.piorConte
             }
         }
 
+        function updateSelectOptions() {
+            const canalSelect = document.getElementById('canal');
+            if (canalSelect && userSettings.canais) {
+                canalSelect.innerHTML = userSettings.canais.map(c => `<option value="${c}">${c}</option>`).join('');
+            }
+            const tipoSelect = document.getElementById('tipo');
+            if (tipoSelect && userSettings.tipos) {
+                tipoSelect.innerHTML = userSettings.tipos.map(t => `<option value="${t}">${t}</option>`).join('');
+            }
+            const quadroSelect = document.getElementById('quadro');
+            if (quadroSelect && userSettings.quadros) {
+                quadroSelect.innerHTML = userSettings.quadros.map(q => `<option value="${q}">${q}</option>`).join('');
+            }
+            const objetivoSelect = document.getElementById('objetivo');
+            if (objetivoSelect && userSettings.objetivos) {
+                objetivoSelect.innerHTML = userSettings.objetivos.map(o => `<option value="${o}">${o}</option>`).join('');
+            }
+        }
+
         function updateStatusDateVisibility() {
-            // Função para destacar o campo de data do status atual
             const currentStatus = document.getElementById('status').value;
             document.querySelectorAll('.status-date-field').forEach(field => {
                 field.classList.remove('ring-2', 'ring-indigo-500', 'rounded-lg');
@@ -2388,21 +2434,22 @@ ${insightsData.visaoMacro?.piorConteudo ? `- ${insightsData.visaoMacro.piorConte
             }
         }
 
-        function updateSelectOptions() {
-            const canalSelect = document.getElementById('canal');
-            if (canalSelect && userSettings.canais) canalSelect.innerHTML = userSettings.canais.map(c => `<option value="${c}">${c}</option>`).join('');
-            const tipoSelect = document.getElementById('tipo');
-            if (tipoSelect && userSettings.tipos) tipoSelect.innerHTML = userSettings.tipos.map(t => `<option value="${t}">${t}</option>`).join('');
-            const quadroSelect = document.getElementById('quadro');
-            if (quadroSelect && userSettings.quadros) quadroSelect.innerHTML = userSettings.quadros.map(q => `<option value="${q}">${q}</option>`).join('');
+        function closeModal() { 
+            document.getElementById('content-modal').classList.add('hidden'); 
         }
-
-        function closeModal() { document.getElementById('content-modal').classList.add('hidden'); }
-        function editContent(id) { openModal(id); }
+        
+        function editContent(id) { 
+            openModal(id); 
+        }
+        
         function createNewMonth() {
             const mes = prompt('Digite o mês (YYYY-MM):', new Date().toISOString().slice(0, 7));
-            if (mes && /^\d{4}-\d{2}$/.test(mes)) { openModal(); document.getElementById('mes').value = mes; }
+            if (mes && /^\d{4}-\d{2}$/.test(mes)) { 
+                openModal(); 
+                document.getElementById('mes').value = mes; 
+            }
         }
+        
         function handleSearch(e) {
             if (e.key === 'Enter') {
                 const term = e.target.value.toLowerCase();
@@ -2411,6 +2458,7 @@ ${insightsData.visaoMacro?.piorConteudo ? `- ${insightsData.visaoMacro.piorConte
                 container.innerHTML = `<div class="mb-4 flex items-center justify-between"><h3 class="text-lg font-bold text-gray-900 dark:text-white">Resultados: "${e.target.value}"</h3><button onclick="navigateTo('${currentPage}')" class="text-indigo-600">Limpar</button></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${filtered.map(c => renderContentCard(c)).join('')}</div>`;
             }
         }
+        
         function filterBanco() {
             const search = document.getElementById('banco-search').value.toLowerCase();
             const statusFilter = document.getElementById('banco-filter-status').value;
@@ -2421,19 +2469,51 @@ ${insightsData.visaoMacro?.piorConteudo ? `- ${insightsData.visaoMacro.piorConte
                 const matchesCanal = !canalFilter || c.canal === canalFilter;
                 return matchesSearch && matchesStatus && matchesCanal;
             });
-            document.getElementById('banco-table-body').innerHTML = filtered.length === 0 ? '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">Nenhum resultado encontrado</td></tr>' : filtered.sort((a, b) => new Date(b.dataPrevista) - new Date(a.dataPrevista)).map(c => `<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50"><td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${c.titulo}</td><td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.canal}</td><td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.tipo}</td><td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span></td><td class="px-6 py-4 text-gray-600 dark:text-gray-400">${formatDate(c.dataPrevista)}</td><td class="px-6 py-4"><button onclick="editContent(\'${c.id}\')" class="text-indigo-600 hover:text-indigo-800 mr-3"><i class="fas fa-edit"></i></button><button onclick="deleteContent(\'${c.id}\')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+            document.getElementById('banco-table-body').innerHTML = filtered.length === 0 ? 
+                '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">Nenhum resultado encontrado</td></tr>' : 
+                filtered.sort((a, b) => new Date(b.dataPrevista) - new Date(a.dataPrevista)).map(c => 
+                    `<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${c.titulo}</td>
+                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.canal}</td>
+                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${c.tipo}</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(c.status)}">${c.status}</span></td>
+                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${formatDate(c.dataPrevista)}</td>
+                        <td class="px-6 py-4">
+                            <button onclick="editContent('${c.id}')" class="text-indigo-600 hover:text-indigo-800 mr-3"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteContent('${c.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`
+                ).join('');
         }
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
+        
+        function toggleSidebar() { 
+            document.getElementById('sidebar').classList.toggle('-translate-x-full'); 
+        }
+        
         function viewMonth(mes) {
             const conteudosMes = conteudos.filter(c => c.mes === mes);
             document.getElementById('month-detail').classList.remove('hidden');
             document.getElementById('month-detail-title').textContent = `Conteúdos de ${formatMonth(mes)}`;
-            document.getElementById('month-detail-content').innerHTML = conteudosMes.length === 0 ? '<p class="text-center text-gray-500 dark:text-gray-400 py-8">Nenhum conteúdo neste mês</p>' : `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">${conteudosMes.map(c => renderContentCard(c)).join('')}</div>`;
+            document.getElementById('month-detail-content').innerHTML = conteudosMes.length === 0 ? 
+                '<p class="text-center text-gray-500 dark:text-gray-400 py-8">Nenhum conteúdo neste mês</p>' : 
+                `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">${conteudosMes.map(c => renderContentCard(c)).join('')}</div>`;
             document.getElementById('month-detail').scrollIntoView({ behavior: 'smooth' });
         }
-        function closeMonthDetail() { document.getElementById('month-detail').classList.add('hidden'); }
-        function changeCalendarMonth(delta) { currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta); renderCalendario(document.getElementById('content-container')); }
-        function goToCurrentMonth() { currentCalendarDate = new Date(); renderCalendario(document.getElementById('content-container')); }
+        
+        function closeMonthDetail() { 
+            document.getElementById('month-detail').classList.add('hidden'); 
+        }
+        
+        function changeCalendarMonth(delta) { 
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta); 
+            renderCalendario(document.getElementById('content-container')); 
+        }
+        
+        function goToCurrentMonth() { 
+            currentCalendarDate = new Date(); 
+            renderCalendario(document.getElementById('content-container')); 
+        }
+        
         function jumpToMonth() {
             const selector = document.getElementById('calendar-month-selector');
             const [ano, mes] = selector.value.split('-');
@@ -2447,6 +2527,7 @@ ${insightsData.visaoMacro?.piorConteudo ? `- ${insightsData.visaoMacro.piorConte
             const newTheme = toggleTheme();
             saveUserSettings();
         }
+        
         async function updateProfile() {
             const newName = document.getElementById('config-name').value;
             if (!newName.trim()) { alert('O nome não pode estar vazio'); return; }
@@ -2461,18 +2542,21 @@ ${insightsData.visaoMacro?.piorConteudo ? `- ${insightsData.visaoMacro.piorConte
             } catch (error) { alert('Erro ao atualizar perfil: ' + error.message); }
             showLoading(false);
         }
+        
         async function saveContentOptions() {
-            const canais = document.getElementById('config-canais').value.split(',').map(s => s.trim()).filter(s => s);
-            const tipos = document.getElementById('config-tipos').value.split(',').map(s => s.trim()).filter(s => s);
-            const quadros = document.getElementById('config-quadros').value.split(',').map(s => s.trim()).filter(s => s);
-            userSettings.canais = canais;
-            userSettings.tipos = tipos;
-            userSettings.quadros = quadros;
+            // Já salvo automaticamente em cada alteração, mas mantido para compatibilidade
             await saveUserSettings();
-            alert('Opções salvas com sucesso!');
+            alert('Configurações salvas com sucesso!');
         }
+        
         function exportData() {
-            const data = { conteudos: conteudos, settings: userSettings, exportDate: new Date().toISOString() };
+            const data = { 
+                conteudos: conteudos, 
+                settings: userSettings, 
+                marca: marcaData,
+                insights: insightsData,
+                exportDate: new Date().toISOString() 
+            };
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -2483,10 +2567,14 @@ ${insightsData.visaoMacro?.piorConteudo ? `- ${insightsData.visaoMacro.piorConte
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
+        
         async function importData(input) {
             const file = input.files[0];
             if (!file) return;
-            if (!confirm('Isso substituirá todos os seus dados atuais. Deseja continuar?')) { input.value = ''; return; }
+            if (!confirm('Isso substituirá todos os seus dados atuais. Deseja continuar?')) { 
+                input.value = ''; 
+                return; 
+            }
             showLoading(true);
             try {
                 const text = await file.text();
@@ -2494,19 +2582,40 @@ ${insightsData.visaoMacro?.piorConteudo ? `- ${insightsData.visaoMacro.piorConte
                 if (data.conteudos && Array.isArray(data.conteudos)) {
                     conteudos = data.conteudos;
                     if (data.settings) userSettings = { ...userSettings, ...data.settings };
+                    if (data.marca) marcaData = { ...marcaData, ...data.marca };
+                    if (data.insights) insightsData = { ...insightsData, ...data.insights };
                     await saveUserData();
                     alert('Dados importados com sucesso!');
                     navigateTo(currentPage);
-                } else { alert('Arquivo inválido!'); }
-            } catch (error) { alert('Erro ao importar: ' + error.message); }
+                } else { 
+                    alert('Arquivo inválido!'); 
+                }
+            } catch (error) { 
+                alert('Erro ao importar: ' + error.message); 
+            }
             input.value = '';
             showLoading(false);
         }
+        
         async function clearAllData() {
             if (!confirm('ATENÇÃO: Isso excluirá PERMANENTEMENTE todos os seus conteúdos. Esta ação não pode ser desfeita. Deseja continuar?')) return;
             if (!confirm('Tem certeza absoluta? Todos os seus dados serão perdidos.')) return;
             showLoading(true);
             conteudos = [];
+            marcaData = {
+                fundamentos: { proposito: '', missao: '', visao: '', valores: '', posicionamento: '', promessa: '', diferencial: '' },
+                publico: { publicoAlvo: '', persona: '', dores: '', desejos: '', linguagem: '', objecoes: '' },
+                estrategia: { planejamentoAnual: '', metaCrescimento: '', estrategiaFunil: '', estrategiaMonetizacao: '', frequenciaCanal: '' },
+                identidade: { arquetipo: '', tomVoz: '', palavrasPermitidas: '', palavrasProibidas: '', manualVisual: '', cores: '', tipografia: '' },
+                cultura: { playlistSpotify: '', referencias: '', manifesto: '' },
+                arquivos: []
+            };
+            insightsData = {
+                metaToken: '',
+                lastUpdate: null,
+                visaoMacro: { alcanceTotal: 0, impressoesTotal: 0, engajamentoMedio: 0, crescimentoSeguidores: 0, melhorConteudo: null, piorConteudo: null },
+                conteudos: []
+            };
             await saveUserData();
             navigateTo('dashboard');
             showLoading(false);
